@@ -1,0 +1,27 @@
+* {
+    cursor: default;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    background-color: #333;
+    overflow: hidden;
+}
+
+.application {
+    position: absolute;
+    -moz-transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    -moz-transform-origin: top left;
+    -webkit-transform-origin: top left;
+}
+
+iframe.application {
+    border: 0;
+    opacity: 0.75;
+}
+
+div.application {
+    opacity: 0;
+}
