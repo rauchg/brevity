@@ -1,10 +1,11 @@
 (function($){
-$.fn.application = function(instanceId, application, z) {
+$.fn.application = function(application) {
     return this.each(function(){
+        var z = $('iframe.application').length;
+
         var iframe = $(this);
 
         iframe
-            .data('instanceId', instanceId)
             .addClass('application')
             .css('zIndex', z)
             .css('left', (48 * z) + 256)
@@ -13,6 +14,10 @@ $.fn.application = function(instanceId, application, z) {
             .css('height', window.innerHeight / 2)
             .attr('src', application.url)
             .appendTo('body');
+
+        var overlay = $(document.createElement('div')).overlay(iframe, z);
+
+        iframe.data('overlay', overlay);
 
         iframe.bind('activate', function(){
             $('.application.active').removeClass('active');
@@ -54,14 +59,13 @@ $.fn.application = function(instanceId, application, z) {
                 .css('top', 0)
                 .css('width', window.innerWidth)
                 .css('height', window.innerHeight)
-                .show();
         });
 
         iframe.bind('wall', function(){
             $('.application').show();
             iframe
                 .removeClass('fullscreen')
-                .rectangle(iframe.data('overlay').rectangle())
+                .rectangle(overlay.rectangle())
         });
     });
 };
