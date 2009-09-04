@@ -9,14 +9,6 @@ $.fn.overlay = function(iframe, z) {
             .rectangle(iframe.rectangle())
             .appendTo('body');
 
-        function isClick(x1, y1, x2, y2, limit) {
-            if ((Math.abs(x2 - x1) <= limit) &&
-                (Math.abs(y2 - y1) <= limit))
-                return true;
-            else
-                return false;
-        }
-
         overlay.mouseover(function(event){
             // This check is a workaround for what seems to be two bugs in
             // WebKit.
@@ -58,7 +50,7 @@ $.fn.overlay = function(iframe, z) {
                 overlay.removeClass('drag');
                 document.unbind('.drag');
 
-                if (isClick( clickX, clickY, event.clientX, event.clientY,
+                if ($.isClick( clickX, clickY, event.clientX, event.clientY,
                     3) === true)
                     iframe.trigger('click');
             });

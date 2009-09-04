@@ -33,4 +33,9 @@ $.fn.opacity = function(opacity) {
             .css('opacity', opacity);
     });
 }
+
+$.isClick = function(x1, y1, x2, y2, limit) {
+    return ((Math.abs(x2 - x1) <= limit) &&
+        (Math.abs(y2 - y1) <= limit));
+}
 })(jQuery);
