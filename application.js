@@ -15,13 +15,9 @@ $.fn.application = function(instanceId, application, z) {
             .appendTo('body');
 
         iframe.bind('activate', function(){
-            var active = $(this);
-
-            // Select all iframes.
-
-            var iframes = $('iframe');
-
-            // Sort by z-index.
+            $('.application.active').removeClass('active');
+            iframe.addClass('active');
+            var iframes = $('iframe.application:not(.active)');
 
             iframes.sort(function(a, b) {
                 return $(a).css('zIndex') - $(b).css('zIndex');
@@ -29,35 +25,43 @@ $.fn.application = function(instanceId, application, z) {
 
             var z = 0;
 
-            // Set z-indexes starting from 0.
-
             iframes.each(function(){
-                var iframe = $(this);
+                $(this)
+                    .fadeExpo(0.75, 1000)
+                    .css('zIndex', z)
+                    .data('overlay')
+                        .css('zIndex', z + 1000);
 
-                if (iframe.data('instanceId') !==
-                    active.data('instanceId')) {
-
-                    iframe
-                        .fadeExpo(0.75, 1000)
-                        .css('zIndex', z)
-                        .data('overlay')
-                            .css('zIndex', z + 1000);
-
-                    z++;
-                }
+                z++;
             });
 
-            // Active gets highest z-index.
-
-            active
+            iframe
                 .opacity(1)
                 .css('zIndex', z)
                 .data('overlay')
                     .css('zIndex', z + 1000);
         });
 
-        iframe.bind('click', function(){
-            console.log('click');
+        iframe.click(function(){
+            iframe.trigger('fullscreen');
+        });
+
+        iframe.bind('fullscreen', function(){
+            $('.application:not(.active)').hide();
+            iframe
+                .addClass('fullscreen')
+                .css('left', 0)
+                .css('top', 0)
+                .css('width', window.innerWidth)
+                .css('height', window.innerHeight)
+                .show();
+        });
+
+        iframe.bind('wall', function(){
+            $('.application').show();
+            iframe
+                .removeClass('fullscreen')
+                .rectangle(iframe.data('overlay').rectangle())
         });
     });
 };

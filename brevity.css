@@ -17,6 +17,11 @@ body {
     -webkit-transform-origin: top left;
 }
 
+iframe.application.fullscreen {
+    -moz-transform: scale(1);
+    -webkit-transform: scale(1);
+}
+
 iframe.application {
     border: 0;
     opacity: 0.75;

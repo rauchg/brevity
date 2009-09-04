@@ -57,6 +57,15 @@ function createInstance(application) {
     return iframe;
 };
 
+$(document).bind('keydown', 'ctrl+shift+space', function(){
+    var active = $('iframe.application.active');
+
+    if (active.hasClass('fullscreen') === true)
+        active.trigger('wall');
+    else
+        active.trigger('fullscreen');
+});
+
 $(function(){
     createInstance(applications[0][0]);
     createInstance(applications[0][1]);
