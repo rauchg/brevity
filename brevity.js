@@ -6,11 +6,11 @@ var applications = [
     },
     {
         name: 'Music',
-        url: 'http://www.rollingstone.com/'
+        url: 'http://www.google.com/'
     },
     {
         name: 'Photo',
-        url: 'http://www.flickr.com/'
+        url: 'http://www.google.com/'
     }
 ],
 [
@@ -45,14 +45,14 @@ var applications = [
 var _instanceId = 0;
 
 function createInstance(application) {
-    var z = $('iframe').length;
-
     var iframe = $(document.createElement('iframe'))
-        .application(_instanceId++, application, z);
+        .application(_instanceId, application, _instanceId);
 
-    var overlay = $(document.createElement('div')).overlay(iframe, z);
+    var overlay = $(document.createElement('div')).overlay(iframe, _instanceId);
 
     iframe.data('overlay', overlay);
+
+    _instanceId++;
 
     return iframe;
 };

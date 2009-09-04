@@ -24,7 +24,7 @@ $.fn.application = function(instanceId, application, z) {
             // Sort by z-index.
 
             iframes.sort(function(a, b) {
-                return $(a).css('zIndex') > $(b).css('zIndex');
+                return $(a).css('zIndex') - $(b).css('zIndex');
             });
 
             var z = 0;
