@@ -6,7 +6,25 @@
 
 body {
     background-color: #333;
+    color: #fff;
     overflow: hidden;
+    font-family: Droid Sans;
+    font-size: 14px;
+}
+
+nav a {
+    display: block;
+    float: left;
+    line-height: 24px;
+    width: 100px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+div.bar {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 10000;
 }
 
 .application {
@@ -24,9 +42,4 @@ iframe.application.fullscreen {
 
 iframe.application {
     border: 0;
-    opacity: 0.75;
-}
-
-div.application {
-    opacity: 0;
 }

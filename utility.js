@@ -10,11 +10,27 @@ $.fn.rectangle = function(rect) {
     }
 
     return this.each(function(){
-        $(this)
-            .css('left', rect.left)
-            .css('top', rect.top)
-            .css('width', rect.width)
-            .css('height', rect.height);
+        if (rect === 'screen') {
+            $(this)
+                .css('left', 0)
+                .css('top', 0)
+                .css('width', window.innerWidth)
+                .css('height', window.innerHeight);
+        }
+        else if (rect === 'wall') {
+            $(this)
+                .css('left', 0)
+                .css('top', 24)
+                .css('width', window.innerWidth)
+                .css('height', window.innerHeight - 48);
+        }
+        else {
+            $(this)
+                .css('left', rect.left)
+                .css('top', rect.top)
+                .css('width', rect.width)
+                .css('height', rect.height);
+        }
     });
 };
 

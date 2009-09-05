@@ -42,22 +42,29 @@ var applications = [
     }
 ]];
 
-function createInstance(application) {
+function createApplication(application) {
     return $(document.createElement('iframe')).application(application);
 };
 
 $(function(){
-    createInstance(applications[0][0]);
-    createInstance(applications[0][1]);
-    createInstance(applications[0][2]).trigger('activate');
+    var wall = $('body').wall();
+
+    $('#documentBar').bar('top');
+    $('#applicationBar').applicationBar();
+
+    createApplication(applications[0][0]);
+    createApplication(applications[0][1]);
+    var iframe = createApplication(applications[0][2]);
+
+    wall.trigger('appactivate', iframe);
+
+    $(window).trigger('resize');
 });
 
 $(document).bind('keydown', 'ctrl+shift+space', function(){
-    var active = $('iframe.application.active');
-
-    if (active.hasClass('fullscreen') === true)
-        active.trigger('wall');
-    else
-        active.trigger('fullscreen');
+    $('iframe.active').trigger('togglefullscreen');
 });
 
+$(document).bind('keydown', 'alt+f', function(){
+    $('.bar').trigger('togglevisibility');
+});

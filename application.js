@@ -1,64 +1,38 @@
 (function($){
 $.fn.application = function(application) {
     return this.each(function(){
-        var z = $('iframe.application').length;
-
         var iframe = $(this);
+
+        var zIndex = $('iframe').length;
 
         iframe
             .addClass('application')
-            .css('zIndex', z)
-            .css('left', (48 * z) + 256)
-            .css('top', (48 * z) + 128)
-            .css('width', window.innerWidth / 2)
-            .css('height', window.innerHeight / 2)
+            .css('zIndex', zIndex)
+            .css('left', (48 * zIndex) + 256)
+            .css('top', (48 * zIndex) + 128)
             .attr('src', application.url)
             .appendTo('body');
 
-        var overlay = $(document.createElement('div')).overlay(iframe, z);
+        var overlay = $(document.createElement('div')).overlay(iframe);
 
         iframe.data('overlay', overlay);
 
-        iframe.bind('activate', function(){
-            $('.application.active').removeClass('active');
-            iframe.addClass('active');
-            var iframes = $('iframe.application:not(.active)');
+        iframe.trigger('appcreated');
 
-            iframes.sort(function(a, b) {
-                return $(a).css('zIndex') - $(b).css('zIndex');
-            });
-
-            var z = 0;
-
-            iframes.each(function(){
-                $(this)
-                    .fadeExpo(0.75, 1000)
-                    .css('zIndex', z)
-                    .data('overlay')
-                        .css('zIndex', z + 1000);
-
-                z++;
-            });
-
-            iframe
-                .opacity(1)
-                .css('zIndex', z)
-                .data('overlay')
-                    .css('zIndex', z + 1000);
-        });
+        // Overlay triggers 'click' when clicked and drag is not registered.
 
         iframe.click(function(){
             iframe.trigger('fullscreen');
         });
 
+        // Hide iframes and overlays, including overlay for the active iframe
+        // to make it possible to interact with it.
+
         iframe.bind('fullscreen', function(){
             $('.application:not(.active)').hide();
             iframe
                 .addClass('fullscreen')
-                .css('left', 0)
-                .css('top', 0)
-                .css('width', window.innerWidth)
-                .css('height', window.innerHeight)
+                .rectangle('screen');
         });
 
         iframe.bind('wall', function(){
@@ -66,6 +40,21 @@ $.fn.application = function(application) {
             iframe
                 .removeClass('fullscreen')
                 .rectangle(overlay.rectangle())
+        });
+
+        iframe.bind('togglefullscreen', function(){
+            if (iframe.hasClass('fullscreen') === false)
+                iframe.trigger('fullscreen');
+            else
+                iframe.trigger('wall');
+        });
+
+        $(window).resize(function(){
+            iframe
+                .css('width', window.innerWidth / 2)
+                .css('height', window.innerHeight / 2);
+
+            overlay.rectangle(iframe.rectangle());
         });
     });
 };

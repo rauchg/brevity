@@ -1,15 +1,14 @@
 (function($){
-$.fn.overlay = function(iframe, z) {
-    return this.each(function(){
-        var overlay = $(this);
 
-        overlay
+$.fn.overlay = function(iframe) {
+    return this.each(function(){
+        var div = $(this);
+
+        div
             .addClass('application')
-            .css('zIndex', z + 1000)
-            .rectangle(iframe.rectangle())
             .appendTo('body');
 
-        overlay.mouseover(function(event){
+        div.mouseover(function(event){
             // This check is a workaround for what seems to be two bugs in
             // WebKit.
             //
@@ -20,13 +19,21 @@ $.fn.overlay = function(iframe, z) {
             //    active div during drag.
 
             if ($('div.application.drag').length === 0)
-                iframe.trigger('activate');
+                $('body').trigger('appactivate', iframe);
         });
 
-        overlay.mousedown(function(event){
-            overlay.addClass('drag');
+        div.bind('activate', function(e, data) {
+            div.css('zIndex', data + 1000);
+        });
 
-            var original = overlay.offset();
+        div.bind('deactivate', function(e, data) {
+            div.css('zIndex', data + 1000);
+        });
+
+        div.mousedown(function(event){
+            div.addClass('drag');
+
+            var original = div.offset();
             var clickX = event.clientX;
             var clickY = event.clientY;
 
@@ -41,17 +48,17 @@ $.fn.overlay = function(iframe, z) {
                 iframe
                     .css('left', left)
                     .css('top', top);
-                overlay
+                div
                     .css('left', left)
                     .css('top', top);
             });
 
             document.bind('mouseup.drag', function(event){
-                overlay.removeClass('drag');
+                div.removeClass('drag');
                 document.unbind('.drag');
 
-                if ($.isClick( clickX, clickY, event.clientX, event.clientY,
-                    3) === true)
+                if ($.isClick(clickX, clickY, event.clientX, event.clientY, 3)
+                    === true)
                     iframe.trigger('click');
             });
         });
