@@ -9,21 +9,26 @@ body {
     color: #fff;
     overflow: hidden;
     font-family: Droid Sans;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 nav a {
     display: block;
     float: left;
     line-height: 24px;
-    width: 100px;
+    width: 160px;
+    overflow: hidden;
     padding-left: 12px;
     padding-right: 12px;
 }
 
+nav#applicationList a {
+    width: 80px;
+}
+
 div.bar {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 10000;
 }
 
@@ -36,8 +41,8 @@ div.bar {
 }
 
 iframe.application.fullscreen {
-    -moz-transform: scale(1);
-    -webkit-transform: scale(1);
+    -moz-transform: none;
+    -webkit-transform: none;
 }
 
 iframe.application {

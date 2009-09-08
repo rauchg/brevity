@@ -10,31 +10,15 @@ $.fn.rectangle = function(rect) {
     }
 
     return this.each(function(){
-        if (rect === 'screen') {
-            $(this)
-                .css('left', 0)
-                .css('top', 0)
-                .css('width', window.innerWidth)
-                .css('height', window.innerHeight);
-        }
-        else if (rect === 'wall') {
-            $(this)
-                .css('left', 0)
-                .css('top', 24)
-                .css('width', window.innerWidth)
-                .css('height', window.innerHeight - 48);
-        }
-        else {
-            $(this)
-                .css('left', rect.left)
-                .css('top', rect.top)
-                .css('width', rect.width)
-                .css('height', rect.height);
-        }
+        $(this)
+            .css('left', rect.left)
+            .css('top', rect.top)
+            .css('width', rect.width)
+            .css('height', rect.height);
     });
 };
 
-$.fn.fadeExpo = function(opacity, duration) {
+$.fn.fadeToExpo = function(duration, opacity) {
     return this.each(function(){
         $(this)
             .stop({ clearQueue: true })
@@ -53,5 +37,23 @@ $.fn.opacity = function(opacity) {
 $.isClick = function(x1, y1, x2, y2, limit) {
     return ((Math.abs(x2 - x1) <= limit) &&
         (Math.abs(y2 - y1) <= limit));
+}
+
+$.create = {};
+
+$.create.nav = function() {
+    return $(document.createElement('nav'));
+}
+
+$.create.div = function() {
+    return $(document.createElement('div'));
+}
+
+$.create.iframe = function() {
+    return $(document.createElement('iframe'));
+}
+
+$.create.a = function() {
+    return $(document.createElement('a'));
 }
 })(jQuery);

@@ -1,12 +1,10 @@
 (function($){
 
-$.fn.overlay = function(iframe) {
+$.fn.overlay = function(application) {
     return this.each(function(){
         var div = $(this);
 
-        div
-            .addClass('application')
-            .appendTo('body');
+        div.addClass('application');
 
         div.mouseover(function(event){
             // This check is a workaround for what seems to be two bugs in
@@ -18,8 +16,9 @@ $.fn.overlay = function(iframe) {
             // 2. mouseover is sometimes triggered more than once on the
             //    active div during drag.
 
-            if ($('div.application.drag').length === 0)
-                $('body').trigger('appactivate', iframe);
+            if ($('div.application.drag').length === 0) {
+                $(document).trigger('appactivate', application);
+            }
         });
 
         div.bind('activate', function(e, data) {
@@ -45,9 +44,7 @@ $.fn.overlay = function(iframe) {
                 var left = original.left + moveX;
                 var top = original.top + moveY;
 
-                iframe
-                    .css('left', left)
-                    .css('top', top);
+                application.move(left, top);
                 div
                     .css('left', left)
                     .css('top', top);
@@ -59,7 +56,7 @@ $.fn.overlay = function(iframe) {
 
                 if ($.isClick(clickX, clickY, event.clientX, event.clientY, 3)
                     === true)
-                    iframe.trigger('click');
+                    application.click();
             });
         });
     });
