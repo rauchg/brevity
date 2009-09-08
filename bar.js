@@ -6,9 +6,9 @@ $.fn.bar = function(orientation) {
         this.toggleBar = function(topVisible, topHidden) {
             bar.stop({ clearQueue: true });
             if (bar.hasClass('hidden') === false)
-                bar.animate({ top: topHidden }, 500);
+                bar.animate({ top: topHidden }, 250);
             else
-                bar.animate({ top: topVisible }, 500);
+                bar.animate({ top: topVisible }, 250);
             bar.toggleClass('hidden');
         }
 

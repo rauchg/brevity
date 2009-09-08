@@ -189,9 +189,6 @@ var Application = Class.extend({
     toggleBars: function() {
         this.state.barsHidden = !this.state.barsHidden;
 
-        if (this.state.active === false)
-            return;
-
         if (this.state.fullscreen === true) {
             if (this.state.barsHidden === true) {
                 var top = 0;
@@ -201,14 +198,25 @@ var Application = Class.extend({
                 var top = 24;
                 var height = window.innerHeight - 48;
             }
-            this.endAnimation();
-            this.state.activeIframe.animate({ top: top, height: height }, 500);
+
+            if (this.state.active === true) {
+                // TODO: This animation causes bugs in some cases when switching
+                // between applications or documents. Fix it.
+
+                this.endAnimation();
+                this.state.activeIframe.animate({ top: top, height: height }, 250);
+            }
+            else {
+                this.state.activeIframe
+                    .css('top', top)
+                    .css('height', height);
+            }
         }
     },
 
     endAnimation: function() {
         if (this.state.activeIframe !== null)
-            this.state.activeIframe.stop({ clearQueue: true, gotoEnd: true });
+            this.state.activeIframe.stop({ clearQueue: true });
     },
 
     click: function() {
