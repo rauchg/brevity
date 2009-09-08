@@ -34,8 +34,7 @@ var Application = Class.extend({
         this.a.opacity(1);
         this.documentList.show();
 
-        if (this.state.activeIframe !== null)
-        {
+        if (this.state.activeIframe !== null) {
             this.state.activeIframe.opacity(1);
             this.state.activeIframe.show();
         }
@@ -44,12 +43,18 @@ var Application = Class.extend({
     },
 
     deactivate: function(zIndex){
+        this.endAnimation();
+
         this.state.active = false;
         this.a.opacity(0.5);
         this.documentList.hide();
 
-        if (this.state.activeIframe !== null)
-            this.state.activeIframe.fadeToExpo(500, 0.75);
+        if (this.state.fullscreen === true)
+            this.state.activeIframe.hide();
+        else {
+            if (this.state.activeIframe !== null)
+                this.state.activeIframe.fadeToExpo(500, 0.75);
+        }
 
         this.setZIndexes(zIndex);
     },
@@ -69,14 +74,14 @@ var Application = Class.extend({
     },
 
     activateDocument: function(iframe){
+        this.endAnimation();
+
         iframe.data('a').opacity(1);
         iframe.opacity(1);
         iframe.show();
 
-        for (var i = 0; i < this.iframes.length; i++)
-        {
-            if (this.iframes[i] !== iframe)
-            {
+        for (var i = 0; i < this.iframes.length; i++) {
+            if (this.iframes[i] !== iframe) {
                 this.iframes[i].data('a').opacity(0.5);
                 this.iframes[i].hide();
             }
@@ -85,11 +90,11 @@ var Application = Class.extend({
         this.state.activeIframe = iframe;
     },
 
-    getActiveDocument: function(){
+    getActiveDocument: function() {
         return this.state.activeIframe;
     },
 
-    setZIndexes: function(zIndex){
+    setZIndexes: function(zIndex) {
         for (var i = 0; i < this.iframes.length; i++)
             this.iframes[i].css('zIndex', zIndex);
 
@@ -97,20 +102,19 @@ var Application = Class.extend({
         this.zIndex = zIndex;
     },
 
-    getZIndex: function(){
+    getZIndex: function() {
         return this.zIndex;
     },
 
-    move: function(left, top){
-        for (var i = 0; i < this.iframes.length; i++)
-        {
+    move: function(left, top) {
+        for (var i = 0; i < this.iframes.length; i++) {
             this.iframes[i].css('left', left);
             this.iframes[i].css('top', top);
         }
     },
 
-    resize: function(){
-        this.state.activeIframe.stop({ clearQueue: true });
+    resize: function() {
+        this.endAnimation();
 
         var rect = {};
 
@@ -139,11 +143,10 @@ var Application = Class.extend({
             this.iframes[i].rectangle(rect);
     },
 
-    fullscreen: function(){
+    fullscreen: function() {
         this.state.fullscreen = true;
 
-        if (this.state.active === false)
-        {
+        if (this.state.active === false) {
             if (this.state.activeIframe !== null)
                 this.state.activeIframe.hide();
         }
@@ -157,17 +160,16 @@ var Application = Class.extend({
     },
 
     wall: function(){
+        this.endAnimation();
+
         this.state.fullscreen = false;
 
-        if (this.state.active === false)
-        {
+        if (this.state.active === false) {
             if (this.state.activeIframe !== null)
                 this.state.activeIframe.show();
         }
 
         this.div.show();
-
-        this.state.activeIframe.stop({ clearQueue: true });
 
         for (var i = 0; i < this.iframes.length; i++)
             this.iframes[i].removeClass('fullscreen');
@@ -175,14 +177,14 @@ var Application = Class.extend({
         this.resize();
     },
 
-    toggleFullscreen: function(){
+    toggleFullscreen: function() {
         if (this.state.fullscreen === true)
             this.wall();
         else
             this.fullscreen();
     },
 
-    toggleBars: function(){
+    toggleBars: function() {
         this.state.barsHidden = !this.state.barsHidden;
 
         if (this.state.active === false)
@@ -197,13 +199,17 @@ var Application = Class.extend({
                 var top = 24;
                 var height = window.innerHeight - 48;
             }
-
-            this.state.activeIframe.stop({ clearQueue: true });
+            this.endAnimation();
             this.state.activeIframe.animate({ top: top, height: height }, 500);
         }
     },
 
-    click: function(){
+    endAnimation: function() {
+        if (this.state.activeIframe !== null)
+            this.state.activeIframe.stop({ clearQueue: true, gotoEnd: true });
+    },
+
+    click: function() {
         $(document).trigger('fullscreen');
     }
 });
