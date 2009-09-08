@@ -50,7 +50,9 @@ var Application = Class.extend({
         this.documentList.hide();
 
         if (this.state.fullscreen === true)
-            this.state.activeIframe.hide();
+            this.state.activeIframe
+                .hide()
+                .css('opacity', 0.75);
         else {
             if (this.state.activeIframe !== null)
                 this.state.activeIframe.fadeToExpo(500, 0.75);
