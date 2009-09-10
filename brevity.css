@@ -6,16 +6,25 @@
 
 body {
     background: url('wall.png');
-    color: #fff;
     overflow: hidden;
+}
+
+body, input {
+    color: #fff;
     font-family: Droid Sans;
     font-size: 13px;
+}
+
+input {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
 }
 
 nav a {
     display: block;
     float: left;
-    line-height: 24px;
     width: 180px;
     overflow: hidden;
     padding-left: 12px;
@@ -28,8 +37,8 @@ nav#applicationList a {
 
 div.bar {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0);
     z-index: 10000;
+    line-height: 24px;
 }
 
 .application {
@@ -40,11 +49,25 @@ div.bar {
     -webkit-transform-origin: top left;
 }
 
-iframe.application.fullscreen {
+body.fullscreen .application {
     -moz-transform: none;
     -webkit-transform: none;
 }
 
 iframe.application {
     border: 0;
+}
+
+.bar input {
+    height: 24px;
+}
+
+#newDocument {
+    float: left;
+    width: 24px;
+    opacity: 0.5;
+}
+
+#newDocument:hover {
+    opacity: 1;
 }

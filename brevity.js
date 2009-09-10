@@ -15,16 +15,16 @@ var appDefinitions = [
 ],
 [
     {
-        name: 'Search',
-        url: 'http://www.google.com/'
+        name: 'Type',
+        url: 'type.html'
     },
     {
-        name: 'Search',
-        url: 'http://www.google.com/'
+        name: 'Photo',
+        url: 'photo.html'
     },
     {
-        name: 'Search',
-        url: 'http://www.google.com/'
+        name: 'Web',
+        url: 'web.html'
     }
 ],
 [
@@ -44,23 +44,30 @@ var appDefinitions = [
 
 var applications = [],
 documentBar,
+newDocument,
 applicationBar,
 applicationList;
+
+var state = {};
+state.active = null;
 
 $(function(){
     documentBar = $('#documentBar').bar('top');
     applicationBar = $('#applicationBar').bar('bottom');
     applicationList = $('#applicationList');
+    newDocument = $('#newDocument');
 
-    var application1 = createApplication(appDefinitions[0][0]);
+    var application1 = createApplication(appDefinitions[1][0]);
     createDocument(application1);
 
-    var application2 = createApplication(appDefinitions[0][1]);
+    var application2 = createApplication(appDefinitions[1][1]);
+    createDocument(application2);
+    createDocument(application2);
+    createDocument(application2);
     createDocument(application2);
     createDocument(application2);
 
-    var application3 = createApplication(appDefinitions[0][2]);
-    createDocument(application3);
+    var application3 = createApplication(appDefinitions[1][2]);
 
     activate(application2);
 
@@ -81,7 +88,7 @@ function createApplication(appDefinition) {
 
     applications.push(application);
 
-    nav.appendTo(documentBar);
+    nav.insertBefore(newDocument);
     div.appendTo('body');
     a.appendTo(applicationList);
 
@@ -111,6 +118,8 @@ function activate(application) {
     }
 
     application.activate(zIndex);
+
+    state.active = application;
 }
 
 $('#applicationList').live('mouseover', function(e){
@@ -120,6 +129,13 @@ $('#applicationList').live('mouseover', function(e){
 
 $('#applicationList').live('click', function(e){
     $(document).trigger('togglefullscreen');
+});
+
+$('#newDocument').live('click', function(){
+    if (state.active !== null) {
+        createDocument(state.active);
+        $(window).trigger('resize');
+    }
 });
 
 $(document).bind('appactivate', function(e, application){

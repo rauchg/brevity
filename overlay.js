@@ -4,8 +4,6 @@ $.fn.overlay = function(application) {
     return this.each(function(){
         var div = $(this);
 
-        div.addClass('application');
-
         div.mouseover(function(event){
             // This check is a workaround for what seems to be two bugs in
             // WebKit.
@@ -16,17 +14,8 @@ $.fn.overlay = function(application) {
             // 2. mouseover is sometimes triggered more than once on the
             //    active div during drag.
 
-            if ($('div.application.drag').length === 0) {
+            if ($('div.application.drag').length === 0)
                 $(document).trigger('appactivate', application);
-            }
-        });
-
-        div.bind('activate', function(e, data) {
-            div.css('zIndex', data + 1000);
-        });
-
-        div.bind('deactivate', function(e, data) {
-            div.css('zIndex', data + 1000);
         });
 
         div.mousedown(function(event){

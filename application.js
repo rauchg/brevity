@@ -5,7 +5,6 @@ var Application = Class.extend({
         this.state = {};
 
         this.state.activeIframe = null;
-        this.state.lastActiveIframe = null;
         this.state.active = false;
         this.state.fullscreen = false;
         this.state.barsHidden = false;
@@ -20,6 +19,7 @@ var Application = Class.extend({
         div.css('zIndex', zIndex);
         div.css('top', 200);
         div.css('left', 200);
+        div.hide();
 
         a.text(appDefinition.name);
         a.data('application', this);
@@ -62,10 +62,12 @@ var Application = Class.extend({
         this.a.opacity(0.5);
         this.documentList.hide();
 
-        if (this.state.fullscreen === true)
-            this.state.activeIframe
-                .hide()
-                .css('opacity', 0.75);
+        if (this.state.fullscreen === true) {
+            if (this.state.activeIframe !== null)
+                this.state.activeIframe
+                    .hide()
+                    .css('opacity', 0.75);
+        }
         else {
             if (this.state.activeIframe !== null)
                 this.state.activeIframe.fadeToExpo(500, 0.75);
@@ -89,32 +91,38 @@ var Application = Class.extend({
     },
 
     removeDocument: function(iframe) {
-        alert(this.iframes.length);
-
-        //this.activateDocument(this.state.lastActiveIframe);
-
-        iframe.data('a').fadeOut('normal', function() {
-            iframe.data('a').remove();
-        });
-
-        var iframes = this.iframes;
-        iframe.fadeOut('normal', function() {
-            var i;
-            for (i = 0; i < iframes.length; i++)
+        for (var i = 0; i < this.iframes.length; i++)
+        {
+            if (this.iframes[i] === iframe)
             {
-                if (iframes[i] === iframe)
-                    break;
+                this.iframes.remove(i);
+                break;
             }
-            iframes.remove(i);
-            iframe.remove();
-        });
+        }
+        iframe.data('a').remove();
+        iframe.remove();
+
+        if (this.iframes.length > 0)
+            this.activateDocument(this.iframes[this.iframes.length - 1]);
+        else
+            this.activateDocument(null);
     },
 
     activateDocument: function(iframe) {
+        if (iframe === null) {
+            this.state.activeIframe = null;
+            if (this.state.fullscreen === false)
+                this.div.hide();
+            return;
+        }
+
         if (iframe === this.state.activeIframe)
             return;
 
         this.endAnimation();
+
+        if (this.div.css('display') === 'none')
+            this.div.show();
 
         iframe.data('a').opacity(1);
         iframe.opacity(1);
@@ -127,7 +135,6 @@ var Application = Class.extend({
             }
         }
 
-        this.state.lastActiveIframe = this.state.activeIframe;
         this.state.activeIframe = iframe;
     },
 
@@ -140,6 +147,7 @@ var Application = Class.extend({
             this.iframes[i].css('zIndex', zIndex);
 
         this.div.css('zIndex', zIndex + 1000);
+
         this.zIndex = zIndex;
     },
 
@@ -173,47 +181,46 @@ var Application = Class.extend({
             }
         }
         else {
-            this.div
-                .css('width', window.innerWidth / 2)
-                .css('height', window.innerHeight / 2);
+            rect.left = this.div.css('left');
+            rect.top = this.div.css('top');
+            rect.width = window.innerWidth / 2;
+            rect.height = window.innerHeight / 2;
 
-            rect = this.div.rectangle();
+            this.div.rectangle(rect);
         }
 
         for (var i = 0; i < this.iframes.length; i++)
             this.iframes[i].rectangle(rect);
     },
 
+    // Runs for all application when fullscreen occurs, not only for the one
+    // to be displayed.
+
     fullscreen: function() {
+        $('body').addClass('fullscreen');
         this.state.fullscreen = true;
+        this.div.hide();
 
         if (this.state.active === false) {
             if (this.state.activeIframe !== null)
                 this.state.activeIframe.hide();
         }
 
-        this.div.hide();
-
-        for (var i = 0; i < this.iframes.length; i++)
-            this.iframes[i].addClass('fullscreen');
-
         this.resize();
     },
 
     wall: function(){
-        this.endAnimation();
-
+        $('body').removeClass('fullscreen');
         this.state.fullscreen = false;
+        this.endAnimation();
 
         if (this.state.active === false) {
             if (this.state.activeIframe !== null)
                 this.state.activeIframe.show();
         }
 
-        this.div.show();
-
-        for (var i = 0; i < this.iframes.length; i++)
-            this.iframes[i].removeClass('fullscreen');
+        if (this.state.activeIframe !== null)
+            this.div.show();
 
         this.resize();
     },
@@ -227,6 +234,9 @@ var Application = Class.extend({
 
     toggleBars: function() {
         this.state.barsHidden = !this.state.barsHidden;
+
+        if (this.state.activeIframe === null)
+            return;
 
         if (this.state.fullscreen === true) {
             if (this.state.barsHidden === true) {
