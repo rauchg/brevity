@@ -5,6 +5,7 @@ var Application = Class.extend({
         this.state = {};
 
         this.state.activeIframe = null;
+        this.state.lastActiveIframe = null;
         this.state.active = false;
         this.state.fullscreen = false;
         this.state.barsHidden = false;
@@ -26,6 +27,18 @@ var Application = Class.extend({
         documentList.bind('mouseover', function(e){
             var a = $(e.target);
             a.data('application').activateDocument(a.data('iframe'));
+        });
+
+        documentList.bind('mousedown', function(e){
+            var a = $(e.target);
+
+            switch (e.button) {
+                case 0:
+                    break;
+                case 2:
+                    a.data('application').removeDocument(a.data('iframe'));
+                    break;
+            }
         });
     },
 
@@ -61,7 +74,7 @@ var Application = Class.extend({
         this.setZIndexes(zIndex);
     },
 
-    addDocument: function(iframe, a){
+    addDocument: function(iframe, a) {
         iframe.addClass('application');
         iframe.attr('src', this.appDefinition.url);
         iframe.data('a', a);
@@ -75,7 +88,32 @@ var Application = Class.extend({
         this.activateDocument(iframe);
     },
 
-    activateDocument: function(iframe){
+    removeDocument: function(iframe) {
+        alert(this.iframes.length);
+
+        //this.activateDocument(this.state.lastActiveIframe);
+
+        iframe.data('a').fadeOut('normal', function() {
+            iframe.data('a').remove();
+        });
+
+        var iframes = this.iframes;
+        iframe.fadeOut('normal', function() {
+            var i;
+            for (i = 0; i < iframes.length; i++)
+            {
+                if (iframes[i] === iframe)
+                    break;
+            }
+            iframes.remove(i);
+            iframe.remove();
+        });
+    },
+
+    activateDocument: function(iframe) {
+        if (iframe === this.state.activeIframe)
+            return;
+
         this.endAnimation();
 
         iframe.data('a').opacity(1);
@@ -89,6 +127,7 @@ var Application = Class.extend({
             }
         }
 
+        this.state.lastActiveIframe = this.state.activeIframe;
         this.state.activeIframe = iframe;
     },
 

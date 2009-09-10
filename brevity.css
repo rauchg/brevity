@@ -5,7 +5,7 @@
 }
 
 body {
-    background-color: #333;
+    background: url('wall.png');
     color: #fff;
     overflow: hidden;
     font-family: Droid Sans;
@@ -16,7 +16,7 @@ nav a {
     display: block;
     float: left;
     line-height: 24px;
-    width: 160px;
+    width: 180px;
     overflow: hidden;
     padding-left: 12px;
     padding-right: 12px;
@@ -28,7 +28,7 @@ nav#applicationList a {
 
 div.bar {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0);
     z-index: 10000;
 }
 

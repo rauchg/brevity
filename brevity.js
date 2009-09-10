@@ -152,6 +152,10 @@ $(document).bind('keydown', 'alt+f', function(){
         applications[i].toggleBars();
 });
 
+$(window).bind('contextmenu', function() {
+    return false;
+});
+
 $(window).resize(function(){
     for (var i = 0; i < applications.length; i++)
         applications[i].resize();
