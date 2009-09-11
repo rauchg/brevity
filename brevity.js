@@ -5,8 +5,8 @@ var appDefinitions = [
         url: 'http://www.google.com/'
     },
     {
-        name: 'Music',
-        url: 'http://www.rollingstone.com/'
+        name: 'Type',
+        url: 'type.html'
     },
     {
         name: 'Photo',
@@ -15,16 +15,16 @@ var appDefinitions = [
 ],
 [
     {
-        name: 'Type',
-        url: 'type.html'
+        name: 'Music',
+        url: 'http://www.rollingstone.com'
+    },
+    {
+        name: 'Web',
+        url: 'http://www.google.com/'
     },
     {
         name: 'Photo',
         url: 'photo.html'
-    },
-    {
-        name: 'Web',
-        url: 'web.html'
     }
 ],
 [
@@ -45,8 +45,10 @@ var appDefinitions = [
 var applications = [],
 documentBar,
 newDocument,
+newApplication,
 applicationBar,
-applicationList;
+applicationList,
+applicationGrid;
 
 var state = {};
 state.active = null;
@@ -56,52 +58,56 @@ $(function(){
     applicationBar = $('#applicationBar').bar('bottom');
     applicationList = $('#applicationList');
     newDocument = $('#newDocument');
+    newApplication = $('#newApplication');
+    applicationGrid = $('#applicationGrid');
 
-    var application1 = createApplication(appDefinitions[1][0]);
-    createDocument(application1);
-
-    var application2 = createApplication(appDefinitions[1][1]);
-    createDocument(application2);
-    createDocument(application2);
-    createDocument(application2);
-    createDocument(application2);
-    createDocument(application2);
-
-    var application3 = createApplication(appDefinitions[1][2]);
-
-    activate(application2);
+    setupApplicationGrid();
 
     $(window).trigger('resize');
 });
 
 function createApplication(appDefinition) {
-    var nav = $.create.nav();
-    var div = $.create.div();
-    var a = $.create.a();
+    var elements = {};
+
+    elements.nav = $.create.nav();
+    elements.div = $.create.div();
+    elements.a = $.create.a();
 
     var application = new Application(
         appDefinition,
-        nav,
-        div,
-        a,
+        elements,
         applications.length);
 
     applications.push(application);
 
-    nav.insertBefore(newDocument);
-    div.appendTo('body');
-    a.appendTo(applicationList);
+    elements.nav.appendTo(documentBar);
+    elements.div.appendTo('body');
+    elements.a.prependTo(applicationList);
 
     return application;
 }
 
+function removeApplication(application) {
+    for (var i = 0; i < applications.length; i++) {
+        if (applications[i] === application) {
+            applications.remove(i);
+            break;
+        }
+    }
+    application.remove();
+}
+
 function createDocument(application) {
-    var iframe = $.create.iframe();
-    var a = $.create.a();
+    var elements = {};
 
-    application.addDocument(iframe, a);
+    elements.iframe = $.create.iframe();
+    elements.a = $.create.a();
+    elements.span = $.create.span();
+    elements.input = $.create.input();
 
-    iframe.appendTo('body');
+    application.addDocument(elements);
+
+    elements.iframe.appendTo('body');
 }
 
 function activate(application) {
@@ -122,20 +128,66 @@ function activate(application) {
     state.active = application;
 }
 
-$('#applicationList').live('mouseover', function(e){
-    var a = $(e.target);
-    activate(a.data('application'));
+function setupApplicationGrid()
+{
+    for (var i = 0; i < appDefinitions.length; i++)
+    {
+        var row = $(document.createElement('tr'));
+        for (var j = 0; j < appDefinitions[i].length; j++)
+        {
+            var td = $(document.createElement('td'));
+
+            td
+                .text(appDefinitions[i][j].name)
+                .data('appDefinition', appDefinitions[i][j])
+                .appendTo(row);
+        }
+        row.appendTo(applicationGrid);
+    }
+}
+
+$('#applicationGrid').live('click', function(e){
+    $(e.target).data('appDefinition');
+    var application = createApplication($(e.target).data('appDefinition'));
+    createDocument(application);
+    activate(application);
+    $(document).trigger('fullscreen');
+    applicationGrid.fadeOut();
 });
 
-$('#applicationList').live('click', function(e){
-    $(document).trigger('togglefullscreen');
+$('#applicationList').live('mouseover', function(e){
+    activate($(e.target).data('application'));
+});
+
+$('#applicationList').live('mousedown', function(e){
+    var a = $(e.target);
+
+    switch (e.button) {
+        case 0:
+            $(document).trigger('togglefullscreen');
+            break;
+        case 2:
+            removeApplication(a.data('application'))
+            break;
+    }
+});
+
+$('body').live('mousedown', function(e){
+
 });
 
 $('#newDocument').live('click', function(){
     if (state.active !== null) {
         createDocument(state.active);
-        $(window).trigger('resize');
+        $(window).trigger('resize'); // TODO: Optimize.
     }
+});
+
+$('#newApplication').live('click', function(){
+    applicationGrid
+        .css('left', 0)
+        .css('top', $(this).offset().top - applicationGrid.height())
+        .show();
 });
 
 $(document).bind('appactivate', function(e, application){
@@ -155,6 +207,11 @@ $(document).bind('wall', function(){
 $(document).bind('togglefullscreen', function(){
     for (var i = 0; i < applications.length; i++)
         applications[i].toggleFullscreen();
+});
+
+$(document).bind('fullscreen', function(){
+    for (var i = 0; i < applications.length; i++)
+        applications[i].fullscreen();
 });
 
 $(document).bind('keydown', 'ctrl+shift+space', function(){

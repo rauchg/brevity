@@ -63,4 +63,12 @@ $.create.iframe = function() {
 $.create.a = function() {
     return $(document.createElement('a'));
 }
+
+$.create.span = function() {
+    return $(document.createElement('span'));
+}
+
+$.create.input = function() {
+    return $(document.createElement('input'));
+}
 })(jQuery);

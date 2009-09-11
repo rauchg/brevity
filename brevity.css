@@ -20,6 +20,14 @@ input {
     margin: 0;
     padding: 0;
     background: transparent;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+}
+
+.bar input.text {
+    float: left;
+    height: 24px;
+    width: 100%;
 }
 
 nav a {
@@ -37,7 +45,7 @@ nav#applicationList a {
 
 div.bar {
     position: absolute;
-    z-index: 10000;
+    z-index: 1000;
     line-height: 24px;
 }
 
@@ -62,12 +70,31 @@ iframe.application {
     height: 24px;
 }
 
-#newDocument {
+input.squareButton {
     float: left;
     width: 24px;
     opacity: 0.5;
 }
 
-#newDocument:hover {
+input.squareButton:hover {
+    opacity: 1;
+}
+
+#applicationGrid {
+    position: absolute;
+    z-index: 10000;
+    border-spacing: 0px;
+    display: none;
+}
+
+#applicationGrid td {
+    width: 64px;
+    height: 64px;
+    text-align: center;
+    background-color: #000;
+    opacity: 0.5;
+}
+
+#applicationGrid td:hover {
     opacity: 1;
 }

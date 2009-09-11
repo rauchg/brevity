@@ -1,45 +1,71 @@
 var Application = Class.extend({
-    init: function(appDefinition, documentList, div, a, zIndex){
+    init: function(appDefinition, elements, initialZIndex){
         this.iframes = [];
 
         this.state = {};
-
         this.state.activeIframe = null;
         this.state.active = false;
         this.state.fullscreen = false;
         this.state.barsHidden = false;
 
         this.appDefinition = appDefinition;
-        this.documentList = documentList;
-        this.div = div.overlay(this);
-        this.a = a;
-        this.zIndex = zIndex;
+        this.documentList = elements.nav;
+        this.div = elements.div;
+        this.a = elements.a;
+        this.zIndex = initialZIndex;
 
-        div.addClass('application');
-        div.css('zIndex', zIndex);
-        div.css('top', 200);
-        div.css('left', 200);
-        div.hide();
+        this.div
+            .overlay(this)
+            .addClass('application')
+            .css('zIndex', initialZIndex)
+            .css('top', 200)
+            .css('left', 200)
+            .hide();
 
-        a.text(appDefinition.name);
-        a.data('application', this);
+        this.a
+            .text(appDefinition.name)
+            .data('application', this)
 
-        documentList.bind('mouseover', function(e){
+        this.documentList.bind('mouseover', function(e){
             var a = $(e.target);
             a.data('application').activateDocument(a.data('iframe'));
         });
 
-        documentList.bind('mousedown', function(e){
-            var a = $(e.target);
+        this.documentList.bind('mousedown', function(e){
+            var element = $(e.target),
+                a;
+
+            if (element.is('span'))
+                a = element.parent();
+            else
+                a = element;
 
             switch (e.button) {
                 case 0:
+                    a.data('span').hide();
+                    a.data('input')
+                        .show()
+                        .attr('value', 'http://www.')
+                        .focus();
+
                     break;
                 case 2:
                     a.data('application').removeDocument(a.data('iframe'));
                     break;
             }
+
+            event.preventDefault();
         });
+    },
+
+    remove: function(){
+        for (var i = 0; i < this.iframes.length; i++)
+            this.iframes[i].remove();
+
+        this.iframes = null;
+        this.documentList.remove();
+        this.div.remove();
+        this.a.remove();
     },
 
     activate: function(zIndex){
@@ -76,18 +102,39 @@ var Application = Class.extend({
         this.setZIndexes(zIndex);
     },
 
-    addDocument: function(iframe, a) {
-        iframe.addClass('application');
-        iframe.attr('src', this.appDefinition.url);
-        iframe.data('a', a);
-        this.iframes.push(iframe);
+    addDocument: function(elements) {
+        elements.iframe
+            .addClass('application')
+            .attr('src', this.appDefinition.url)
+            .data('a', elements.a);
 
-        a.text(this.appDefinition.url);
-        a.data('iframe', iframe);
-        a.data('application', this);
-        a.appendTo(this.documentList);
+        this.iframes.push(elements.iframe);
 
-        this.activateDocument(iframe);
+        elements.input
+            .hide()
+            .addClass('text');
+
+        elements.input.bind('keydown', function(e){
+            if (e.keyCode === 13) {
+                elements.input.hide();
+                elements.span.text(elements.input.attr('value'));
+                elements.span.show();
+                elements.iframe.attr('src', elements.input.attr('value'));
+            }
+        });
+
+        elements.span.text(this.appDefinition.url);
+
+        elements.a
+            .data('iframe', elements.iframe)
+            .data('span', elements.span)
+            .data('input', elements.input)
+            .data('application', this)
+            .append(elements.span)
+            .append(elements.input)
+            .prependTo(this.documentList);
+
+        this.activateDocument(elements.iframe);
     },
 
     removeDocument: function(iframe) {
