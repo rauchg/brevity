@@ -98,3 +98,9 @@ input.squareButton:hover {
 #applicationGrid td:hover {
     opacity: 1;
 }
+
+#clock {
+    float: right;
+    padding-right: 8px;
+    opacity: 0.5;
+}
