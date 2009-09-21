@@ -1,57 +1,40 @@
 var appDefinitions = [
 [
-    {
-        name: 'Search',
-        url: 'http://www.google.com/'
-    },
-    {
-        name: 'Type',
-        url: 'type.html'
-    },
-    {
-        name: 'Photo',
-        url: 'http://www.flickr.com/'
-    }
+    {  name: 'Search',
+       url: 'http://www.google.com/' },
+    {  name: 'Type',
+       url: 'applications/type.html' },
+    {  name: 'Photo',
+       url: 'http://www.flickr.com/' }
 ],
 [
-    {
-        name: 'Music',
-        url: 'http://www.rollingstone.com'
-    },
-    {
-        name: 'Web',
-        url: 'http://www.google.com/'
-    },
-    {
-        name: 'Photo',
-        url: 'photo.html'
-    }
+    {  name: 'Music',
+       url: 'http://www.rollingstone.com' },
+    {  name: 'Web',
+       url: 'http://www.google.com/' },
+    {  name: 'Photo',
+       url: 'applications/photo.html' }
 ],
 [
-    {
-        name: 'Search',
-        url: 'http://www.google.com/'
-    },
-    {
-        name: 'Search',
-        url: 'http://www.google.com/'
-    },
-    {
-        name: 'Search',
-        url: 'http://www.google.com/'
-    }
+    {  name: 'Search',
+       url: 'http://www.google.com/' },
+    {  name: 'Search',
+       url: 'http://www.google.com/' },
+    {  name: 'Search',
+       url: 'http://www.google.com/' }
 ]];
 
 var applications = [],
+activeApplication = null,
+
 documentBar,
 newDocument,
-newApplication,
-applicationBar,
-applicationList,
-applicationGrid;
 
-var state = {};
-state.active = null;
+applicationBar,
+newApplication,
+applicationList,
+
+applicationGrid;
 
 function updateClock() {
     var now = new Date();
@@ -76,10 +59,12 @@ $(function(){
     updateClock();
 
     documentBar = $('#documentBar').bar('top');
-    applicationBar = $('#applicationBar').bar('bottom');
-    applicationList = $('#applicationList');
     newDocument = $('#newDocument');
+
+    applicationBar = $('#applicationBar').bar('bottom');
     newApplication = $('#newApplication');
+    applicationList = $('#applicationList');
+
     applicationGrid = $('#applicationGrid');
 
     setupApplicationGrid();
@@ -131,53 +116,32 @@ function createDocument(application) {
     elements.iframe.appendTo('body');
 }
 
-function activate(application) {
+function activateApplication(application) {
     applications.sort(function(a, b){
         return a.getZIndex() - b.getZIndex();
     });
 
     var zIndex = 0;
 
-    for (var i = 0; i < applications.length; i++)
-    {
+    for (var i = 0; i < applications.length; i++) {
         if (applications[i] !== application)
             applications[i].deactivate(zIndex++);
     }
 
     application.activate(zIndex);
 
-    state.active = application;
+    activeApplication = application;
 }
 
-function setupApplicationGrid()
-{
-    for (var i = 0; i < appDefinitions.length; i++)
-    {
-        var row = $(document.createElement('tr'));
-        for (var j = 0; j < appDefinitions[i].length; j++)
-        {
-            var td = $(document.createElement('td'));
-
-            td
-                .text(appDefinitions[i][j].name)
-                .data('appDefinition', appDefinitions[i][j])
-                .appendTo(row);
-        }
-        row.appendTo(applicationGrid);
+$('#newDocument').live('click', function(){
+    if (activeApplication !== null) {
+        createDocument(activeApplication);
+        $(window).trigger('resize'); // TODO: Optimize.
     }
-}
-
-$('#applicationGrid').live('click', function(e){
-    $(e.target).data('appDefinition');
-    var application = createApplication($(e.target).data('appDefinition'));
-    createDocument(application);
-    activate(application);
-    $(document).trigger('fullscreen');
-    applicationGrid.fadeOut();
 });
 
 $('#applicationList').live('mouseover', function(e){
-    activate($(e.target).data('application'));
+    activateApplication($(e.target).data('application'));
 });
 
 $('#applicationList').live('mousedown', function(e){
@@ -193,17 +157,6 @@ $('#applicationList').live('mousedown', function(e){
     }
 });
 
-$('body').live('mousedown', function(e){
-
-});
-
-$('#newDocument').live('click', function(){
-    if (state.active !== null) {
-        createDocument(state.active);
-        $(window).trigger('resize'); // TODO: Optimize.
-    }
-});
-
 $('#newApplication').live('click', function(){
     applicationGrid
         .css('left', 0)
@@ -211,8 +164,34 @@ $('#newApplication').live('click', function(){
         .show();
 });
 
-$(document).bind('appactivate', function(e, application){
-    activate(application);
+function setupApplicationGrid() {
+    for (var i = 0; i < appDefinitions.length; i++) {
+        var row = $.create.tr();
+        for (var j = 0; j < appDefinitions[i].length; j++) {
+            $.create.td()
+                .text(appDefinitions[i][j].name)
+                .data('appDefinition', appDefinitions[i][j])
+                .appendTo(row);
+        }
+        row.appendTo(applicationGrid);
+    }
+}
+
+$('#applicationGrid').live('click', function(e){
+    var appDefinition = $(e.target).data('appDefinition'),
+    application = createApplication(appDefinition);
+    createDocument(application);
+    activateApplication(application);
+    $(document).trigger('fullscreen');
+    applicationGrid.fadeOut();
+});
+
+$('body').live('mousedown', function(e){
+
+});
+
+$(document).bind('activateapplication', function(e, application){
+    activateApplication(application);
 });
 
 $(document).bind('fullscreen', function(){
@@ -230,23 +209,22 @@ $(document).bind('togglefullscreen', function(){
         applications[i].toggleFullscreen();
 });
 
-$(document).bind('fullscreen', function(){
-    for (var i = 0; i < applications.length; i++)
-        applications[i].fullscreen();
-});
-
-$(document).bind('keydown', 'ctrl+shift+space', function(){
-    $(document).trigger('togglefullscreen');
-});
-
-$(document).bind('keydown', 'alt+f', function(){
-    $('.bar').trigger('bartoggle');
+$(document).bind('togglebars', function(){
+    $('.bar').trigger('toggle');
 
     for (var i = 0; i < applications.length; i++)
         applications[i].toggleBars();
 });
 
-$(window).bind('contextmenu', function() {
+$(document).bind('keydown', 'ctrl+space', function(){
+    $(document).trigger('togglefullscreen');
+});
+
+$(document).bind('keydown', 'alt+f', function(){
+    $(document).trigger('togglebars');
+});
+
+$(window).bind('contextmenu', function(){
     return false;
 });
 

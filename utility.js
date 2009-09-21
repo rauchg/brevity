@@ -71,4 +71,12 @@ $.create.span = function() {
 $.create.input = function() {
     return $(document.createElement('input'));
 }
+
+$.create.tr = function() {
+    return $(document.createElement('tr'));
+}
+
+$.create.td = function() {
+    return $(document.createElement('td'));
+}
 })(jQuery);

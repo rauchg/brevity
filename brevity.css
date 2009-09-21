@@ -5,14 +5,14 @@
 }
 
 body {
-    background: url('wall.png');
+    background: url('resources/wall.png');
     overflow: hidden;
 }
 
 body, input {
     color: #fff;
     font-family: Droid Sans;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 input {
@@ -26,7 +26,7 @@ input {
 
 .bar input.text {
     float: left;
-    height: 24px;
+    height: 22px;
     width: 100%;
 }
 
@@ -46,7 +46,7 @@ nav#applicationList a {
 div.bar {
     position: absolute;
     z-index: 1000;
-    line-height: 24px;
+    line-height: 22px;
 }
 
 .application {
@@ -67,13 +67,13 @@ iframe.application {
 }
 
 .bar input {
-    height: 24px;
+    height: 22px;
 }
 
 input.squareButton {
     float: left;
-    width: 24px;
-    opacity: 0.5;
+    width: 22px;
+    opacity: 0.625;
 }
 
 input.squareButton:hover {
@@ -88,11 +88,11 @@ input.squareButton:hover {
 }
 
 #applicationGrid td {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     text-align: center;
     background-color: #000;
-    opacity: 0.5;
+    opacity: 0.625;
 }
 
 #applicationGrid td:hover {
@@ -102,5 +102,5 @@ input.squareButton:hover {
 #clock {
     float: right;
     padding-right: 8px;
-    opacity: 0.5;
+    opacity: 0.625;
 }

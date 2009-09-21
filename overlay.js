@@ -2,9 +2,11 @@
 
 $.fn.overlay = function(application) {
     return this.each(function(){
-        var div = $(this);
+        var overlay = $(this)
+            .addClass('application')
+            .hide();
 
-        div.mouseover(function(event){
+        overlay.mouseover(function(event){
             // This check is a workaround for what seems to be two bugs in
             // WebKit.
             //
@@ -15,37 +17,37 @@ $.fn.overlay = function(application) {
             //    active div during drag.
 
             if ($('div.application.drag').length === 0)
-                $(document).trigger('appactivate', application);
+                $(document).trigger('activateapplication', application);
         });
 
-        div.mousedown(function(event){
-            div.addClass('drag');
+        overlay.mousedown(function(event){
+            overlay.addClass('drag');
 
-            var original = div.offset();
-            var clickX = event.clientX;
-            var clickY = event.clientY;
+            var original = overlay.offset(),
+            clickX = event.clientX,
+            clickY = event.clientY;
 
             var document = $(document);
 
             document.bind('mousemove.drag', function(event){
-                var moveX = event.clientX - clickX;
-                var moveY = event.clientY - clickY;
-                var left = original.left + moveX;
-                var top = original.top + moveY;
+                var moveX = event.clientX - clickX,
+                moveY = event.clientY - clickY,
+                left = original.left + moveX,
+                top = original.top + moveY;
 
                 application.move(left, top);
-                div
+                overlay
                     .css('left', left)
                     .css('top', top);
             });
 
             document.bind('mouseup.drag', function(event){
-                div.removeClass('drag');
+                overlay.removeClass('drag');
                 document.unbind('.drag');
 
                 if ($.isClick(clickX, clickY, event.clientX, event.clientY, 3)
                     === true)
-                    application.click();
+                   document.trigger('fullscreen'); 
             });
         });
     });

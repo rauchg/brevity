@@ -12,22 +12,22 @@ $.fn.bar = function(orientation) {
             bar.toggleClass('hidden');
         }
 
-        bar.bind('bartoggle', function(){
+        bar.bind('toggle', function(){
             if (orientation === 'top')
-                this.toggleBar(0, -24);
+                this.toggleBar(0, -22);
             else if (orientation === 'bottom')
-                this.toggleBar(window.innerHeight - 24, window.innerHeight);
+                this.toggleBar(window.innerHeight - 22, window.innerHeight);
         });
 
         $(window).resize(function(){
             bar
                 .css('left', 0)
                 .css('width', window.innerWidth)
-                .css('height', 24);
+                .css('height', 22);
             if (orientation === 'top')
                 bar.css('top', 0);
             else if (orientation === 'bottom')
-                bar.css('top', window.innerHeight - 24);
+                bar.css('top', window.innerHeight - 22);
         });
     });
 };
