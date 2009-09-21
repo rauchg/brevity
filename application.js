@@ -7,7 +7,8 @@ var Application = Class.extend({
             .text(applicationDefinition.name)
             .data('application', this);
 
-        // Documents are represented as iframes. It's allowed for an application        // to not have any documents. Maximum one can be visible at the same
+        // Documents are represented as iframes. It's allowed for an application
+        // to not have any documents. Maximum one can be visible at the same
         // time. 
         this.documents = [];
         this.activeDocument = null;
