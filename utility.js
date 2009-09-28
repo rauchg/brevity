@@ -46,37 +46,20 @@ $.isClick = function(x1, y1, x2, y2, limit) {
         (Math.abs(y2 - y1) <= limit));
 }
 
-$.create = {};
-
-$.create.nav = function() {
-    return $(document.createElement('nav'));
+$.create = function(element) {
+    return $(document.createElement(element));
 }
 
-$.create.div = function() {
-    return $(document.createElement('div'));
-}
+// Used to keep a box within e.g. the screen range. Has to be called once for
+// left (a) and right (b), and another time for top (a) and bottom (b). Returns
+// the value to be used for left (a) or top (a), respectively.
 
-$.create.iframe = function() {
-    return $(document.createElement('iframe'));
-}
-
-$.create.a = function() {
-    return $(document.createElement('a'));
-}
-
-$.create.span = function() {
-    return $(document.createElement('span'));
-}
-
-$.create.input = function() {
-    return $(document.createElement('input'));
-}
-
-$.create.tr = function() {
-    return $(document.createElement('tr'));
-}
-
-$.create.td = function() {
-    return $(document.createElement('td'));
+$.range = function(a, b, lower, upper) {
+    if (Math.max(a, lower) === lower)
+        return lower;
+    else if (Math.min(b, upper) === upper)
+        return upper - (b - a);
+    else
+        return a;
 }
 })(jQuery);

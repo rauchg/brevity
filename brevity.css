@@ -9,11 +9,21 @@ body {
     overflow: hidden;
 }
 
+#wall {
+    position: absolute;
+    z-index: -1;
+}
+
 body, input {
     color: #fff;
-    font-family: Droid Sans;
+    font-family: 'Droid Sans'; 
     font-size: 12px;
 }
+
+/*@font-face {
+    font-family: 'Droid Sans';
+    src: url('resources/fonts/DroidSans.ttf');
+}*/
 
 input {
     border: 0;
@@ -80,6 +90,10 @@ input.squareButton:hover {
     opacity: 1;
 }
 
+div.right {
+    float: right;
+}
+
 #applicationGrid {
     position: absolute;
     z-index: 10000;
@@ -100,7 +114,6 @@ input.squareButton:hover {
 }
 
 #clock {
-    float: right;
     padding-right: 8px;
     opacity: 0.625;
 }

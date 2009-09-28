@@ -73,22 +73,14 @@ $(function(){
 });
 
 function createApplication(appDefinition) {
-    var elements = {};
-
-    elements.nav = $.create.nav();
-    elements.div = $.create.div();
-    elements.a = $.create.a();
-
     var application = new Application(
         appDefinition,
-        elements,
         applications.length);
 
     applications.push(application);
 
-    elements.nav.appendTo(documentBar);
-    elements.div.appendTo('body');
-    elements.a.prependTo(applicationList);
+    application.getDocumentList().appendTo(documentBar);
+    application.getApplicationTab().prependTo(applicationList);
 
     return application;
 }
@@ -104,16 +96,7 @@ function removeApplication(application) {
 }
 
 function createDocument(application) {
-    var elements = {};
-
-    elements.iframe = $.create.iframe();
-    elements.a = $.create.a();
-    elements.span = $.create.span();
-    elements.input = $.create.input();
-
-    application.addDocument(elements);
-
-    elements.iframe.appendTo('body');
+    application.addDocument(new Document(application.getUrl()));
 }
 
 function activateApplication(application) {
@@ -133,11 +116,15 @@ function activateApplication(application) {
     activeApplication = application;
 }
 
-$('#newDocument').live('click', function(){
+$('#newDocument').live('mousedown', function(){
     if (activeApplication !== null) {
         createDocument(activeApplication);
         $(window).trigger('resize'); // TODO: Optimize.
     }
+});
+
+$('#toggleFullscreen').live('mousedown', function(){
+    $(document).trigger('togglefullscreen');   
 });
 
 $('#applicationList').live('mouseover', function(e){
@@ -157,18 +144,21 @@ $('#applicationList').live('mousedown', function(e){
     }
 });
 
-$('#newApplication').live('click', function(){
-    applicationGrid
-        .css('left', 0)
-        .css('top', $(this).offset().top - applicationGrid.height())
-        .show();
+$('#newApplication').live('mousedown', function(){
+    if (applicationGrid.css('display') !== 'none')
+        applicationGrid.hide();
+    else
+        applicationGrid
+            .css('left', 0)
+            .css('top', $(this).offset().top - applicationGrid.height())
+            .show();
 });
 
 function setupApplicationGrid() {
     for (var i = 0; i < appDefinitions.length; i++) {
-        var row = $.create.tr();
+        var row = $.create('tr');
         for (var j = 0; j < appDefinitions[i].length; j++) {
-            $.create.td()
+            $.create('td')
                 .text(appDefinitions[i][j].name)
                 .data('appDefinition', appDefinitions[i][j])
                 .appendTo(row);
@@ -177,7 +167,7 @@ function setupApplicationGrid() {
     }
 }
 
-$('#applicationGrid').live('click', function(e){
+$('#applicationGrid').live('mousedown', function(e){
     var appDefinition = $(e.target).data('appDefinition'),
     application = createApplication(appDefinition);
     createDocument(application);
@@ -186,8 +176,20 @@ $('#applicationGrid').live('click', function(e){
     applicationGrid.fadeOut();
 });
 
-$('body').live('mousedown', function(e){
+$('#wall').live('mousedown', function(e){
+    if (applicationGrid.css('display') !== 'none')
+        applicationGrid.hide();
+    else {
+        var left = e.clientX - (applicationGrid.width() / 2);
+        var top = e.clientY - (applicationGrid.height() / 2);
 
+        applicationGrid
+            .css('left', $.range(left, left + applicationGrid.width(), 0,
+                window.innerWidth))
+            .css('top', $.range(top, top + applicationGrid.height(), 0,
+                window.innerHeight))
+            .show();
+    }
 });
 
 $(document).bind('activateapplication', function(e, application){
@@ -220,8 +222,15 @@ $(document).bind('keydown', 'ctrl+space', function(){
     $(document).trigger('togglefullscreen');
 });
 
+$(document).bind('keydown', 'space', function(){
+    $(document).trigger('fullscreen');
+});
+
 $(document).bind('keydown', 'alt+f', function(){
     $(document).trigger('togglebars');
+});
+
+$(document).bind('keydown', function(e){
 });
 
 $(window).bind('contextmenu', function(){
@@ -229,6 +238,12 @@ $(window).bind('contextmenu', function(){
 });
 
 $(window).resize(function(){
+    var rect = {};
+    rect.left = 0;
+    rect.top = 0;
+    rect.width = window.innerWidth;
+    rect.height = window.innerHeight;
+    $('#wall').rectangle(rect);
     for (var i = 0; i < applications.length; i++)
         applications[i].resize();
 });

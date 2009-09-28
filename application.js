@@ -1,26 +1,26 @@
 var Application = Class.extend({
-    init: function(applicationDefinition, elements, zIndex){
+    init: function(applicationDefinition, zIndex){
 
         this.applicationDefinition = applicationDefinition;
         this.active = false;
-        this.applicationListItem = elements.a
+        this.applicationTab = $.create('a')
             .text(applicationDefinition.name)
             .data('application', this);
 
-        // Documents are represented as iframes. It's allowed for an application
-        // to not have any documents. Maximum one can be visible at the same
-        // time. 
+        // It's allowed for an application to not have any documents. Maximum
+        // one can be visible at the same time. 
         this.documents = [];
         this.activeDocument = null;
-        this.documentList = elements.nav;
+        this.documentList = $.create('nav');
 
         // Placed over active iframe to make it possible to drag the application
         // around. Hidden in fullscreen or in wall view if no document is
         // active.
-        this.overlay = elements.div
+        this.overlay = $.create('div')
             .overlay(this)
             .css('top', 200)
-            .css('left', 200);
+            .css('left', 200)
+            .appendTo('body');
 
         // Highest z-index of all applications. Set on all iframes and overlay
         // when application is activated.
@@ -30,9 +30,11 @@ var Application = Class.extend({
         this.isFullscreen = false;
         this.barsHidden = false;
 
+        var application = this;
         this.documentList.bind('mouseover', function(e){
             var item = $(e.target);
-            item.data('application').activateDocument(item.data('iframe'));
+            if (item.is('a'))
+                application.activateDocument(item.data('document'));
         });
 
         this.documentList.bind('mousedown', function(e){
@@ -51,13 +53,24 @@ var Application = Class.extend({
 
                 break;
             case 2:
-                item.data('application').removeDocument(
-                    item.data('iframe'));
+                application.removeDocument(item.data('document'));
                 break;
             }
 
-            event.preventDefault();
+            e.preventDefault();
         });
+    },
+
+    getApplicationTab: function(){
+        return this.applicationTab;
+    },
+
+    getDocumentList: function(){
+        return this.documentList;
+    },
+
+    getUrl: function(){
+        return this.applicationDefinition.url;
     },
 
     remove: function(){
@@ -67,89 +80,51 @@ var Application = Class.extend({
         this.documents = null;
         this.documentList.remove();
         this.overlay.remove();
-        this.applicationListItem.remove();
+        this.applicationTab.remove();
     },
 
     activate: function(zIndex){
         this.active = true;
-        this.applicationListItem.opacity(1);
+        this.applicationTab.opacity(1);
         this.documentList.show();
 
-        if (this.activeDocument !== null) {
-            this.activeDocument
-                .opacity(1)
-                .show();
-        }
+        if (this.activeDocument !== null)
+            this.activeDocument.activate();
 
         this.setZIndexes(zIndex);
     },
 
     deactivate: function(zIndex){
-        this.endAnimation();
-
         this.active = false;
-        this.applicationListItem.opacity(0.625);
+        this.applicationTab.opacity(0.625);
         this.documentList.hide();
 
         if (this.activeDocument !== null) {
-            if (this.isFullscreen === true) {
-                this.activeDocument
-                    .hide()
-                    .css('opacity', 0.625);
-            }
+            if (this.isFullscreen === true)
+                this.activeDocument.deactivateApplicationFullscreen();
             else
-                this.activeDocument.fadeToExpo(500, 0.625);
+                this.activeDocument.deactivateApplicationWall();
         }
 
         this.setZIndexes(zIndex);
     },
 
-    addDocument: function(elements) {
-        elements.iframe
-            .addClass('application')
-            .attr('src', this.applicationDefinition.url)
-            .data('a', elements.a);
-
-        this.documents.push(elements.iframe);
-
-        elements.input
-            .hide()
-            .addClass('text');
-
-        elements.input.bind('keydown', function(e){
-            if (e.keyCode === 13) {
-                elements.input.hide();
-                elements.span
-                    .text(elements.input.attr('value'))
-                    .show();
-                elements.iframe.attr('src', elements.input.attr('value'));
-            }
-        });
-
-        elements.span.text(this.applicationDefinition.url);
-
-        elements.a
-            .data('iframe', elements.iframe)
-            .data('span', elements.span)
-            .data('input', elements.input)
-            .data('application', this)
-            .append(elements.span)
-            .append(elements.input)
-            .prependTo(this.documentList);
-
-        this.activateDocument(elements.iframe);
+    addDocument: function(document) {
+        this.documents.push(document);
+        document.getDocumentTab().prependTo(this.documentList);
+        document.setZIndex(this.zIndex);
+        this.activateDocument(document);
     },
 
-    removeDocument: function(iframe) {
+    removeDocument: function(document) {
         for (var i = 0; i < this.documents.length; i++) {
-            if (this.documents[i] === iframe) {
+            if (this.documents[i] === document) {
                 this.documents.remove(i);
                 break;
             }
         }
 
-        iframe.data('a').remove();
-        iframe.remove();
+        document.remove();
 
         if (this.documents.length > 0)
             this.activateDocument(this.documents[this.documents.length - 1]);
@@ -157,35 +132,28 @@ var Application = Class.extend({
             this.activateDocument(null);
     },
 
-    activateDocument: function(iframe) {
-        if (iframe === null) {
+    activateDocument: function(document) {
+        if (document === this.activeDocument)
+            return;
+
+        if (document === null) {
             this.activeDocument = null;
             if (this.isFullscreen === false)
                 this.overlay.hide();
             return;
         }
 
-        if (iframe === this.activeDocument)
-            return;
-
-        this.endAnimation();
-
         if (this.overlay.css('display') === 'none')
             this.overlay.show();
 
-        iframe.data('a').opacity(1);
-        iframe
-            .opacity(1)
-            .show();
+        document.activate();
 
         for (var i = 0; i < this.documents.length; i++) {
-            if (this.documents[i] !== iframe) {
-                this.documents[i].data('a').opacity(0.625);
-                this.documents[i].hide();
-            }
+            if (this.documents[i] !== document)
+                this.documents[i].deactivate();
         }
 
-        this.activeDocument = iframe;
+        this.activeDocument = document;
     },
 
     getActiveDocument: function() {
@@ -194,10 +162,9 @@ var Application = Class.extend({
 
     setZIndexes: function(zIndex) {
         for (var i = 0; i < this.documents.length; i++)
-            this.documents[i].css('zIndex', zIndex);
+            this.documents[i].setZIndex(zIndex);
 
         this.overlay.css('zIndex', zIndex + 1000);
-
         this.zIndex = zIndex;
     },
 
@@ -206,16 +173,11 @@ var Application = Class.extend({
     },
 
     move: function(left, top) {
-        for (var i = 0; i < this.documents.length; i++) {
-            this.documents[i]
-                .css('left', left)
-                .css('top', top);
-        }
+        for (var i = 0; i < this.documents.length; i++)
+            this.documents[i].move(left, top);
     },
 
     resize: function() {
-        this.endAnimation();
-
         var rect = {};
 
         if (this.isFullscreen === false) {
@@ -263,7 +225,6 @@ var Application = Class.extend({
     wall: function(){
         $('body').removeClass('fullscreen');
         this.isFullscreen = false;
-        this.endAnimation();
 
         if (this.active === false) {
             if (this.activeDocument !== null)
@@ -301,24 +262,10 @@ var Application = Class.extend({
                 height = window.innerHeight - 44;
             }
 
-            if (this.active === true) {
-                // TODO: This animation causes bugs in some cases when switching
-                // between applications or documents before the animation has
-                // ended. Fix it.
-
-                this.endAnimation();
-                this.activeDocument.animate({ top: top, height: height }, 250);
-            }
-            else {
-                this.activeDocument
-                    .css('top', top)
-                    .css('height', height);
-            }
+            if (this.active === true)
+                this.activeDocument.setVerticalBounds(top, height, true);
+            else
+                this.activeDocument.setVerticalBounds(top, height);
         }
-    },
-
-    endAnimation: function() {
-        if (this.activeDocument !== null)
-            this.activeDocument.stop({ clearQueue: true, gotoEnd: true });
     }
 });
