@@ -1,92 +1,34 @@
 var Application = Class.extend({
-    init: function(applicationDefinition, zIndex){
+    init: function(brevity, applicationDefinition, documentList, applicationTab, overlay, zIndex){
 
         this.applicationDefinition = applicationDefinition;
-        this.active = false;
-        this.applicationTab = $.create('a')
-            .text(applicationDefinition.name)
-            .data('application', this);
 
-        // It's allowed for an application to not have any documents. Maximum
-        // one can be visible at the same time. 
-        this.documents = [];
-        this.activeDocument = null;
-        this.documentList = $.create('nav');
-
-        // Placed over active iframe to make it possible to drag the application
-        // around. Hidden in fullscreen or in wall view if no document is
-        // active.
-        this.overlay = $.create('div')
-            .overlay(this)
-            .css('top', 200)
-            .css('left', 200)
-            .appendTo('body');
-
-        // Highest z-index of all applications. Set on all iframes and overlay
-        // when application is activated.
+        this.applicationTab = applicationTab
+            .data('application', this)
+            .text(applicationDefinition.name);
+        this.documentList = documentList.documentList(this);
+        this.overlay = overlay.applicationOverlay(brevity, this);
         this.zIndex = zIndex;
 
-        // Cache state to avoid uneccessary use of selectors.
+        this.active = false;
+        this.documents = [];
+        this.activeDocument = null;
         this.isFullscreen = false;
         this.barsHidden = false;
-
-        var application = this;
-        this.documentList.bind('mouseover', function(e){
-            var item = $(e.target);
-            if (item.is('a'))
-                application.activateDocument(item.data('document'));
-        });
-
-        this.documentList.bind('mousedown', function(e){
-            var item = $(e.target);
-
-            if (item.is('span'))
-                item = item.parent();
-
-            switch (e.button) {
-            case 0:
-                item.data('span').hide();
-                item.data('input')
-                    .attr('value', 'http://www.')
-                    .show()
-                    .focus();
-
-                break;
-            case 2:
-                application.removeDocument(item.data('document'));
-                break;
-            }
-
-            e.preventDefault();
-        });
-    },
-
-    getApplicationTab: function(){
-        return this.applicationTab;
-    },
-
-    getDocumentList: function(){
-        return this.documentList;
     },
 
     getUrl: function(){
         return this.applicationDefinition.url;
     },
 
-    remove: function(){
-        for (var i = 0; i < this.documents.length; i++)
-            this.documents[i].remove();
-
-        this.documents = null;
-        this.documentList.remove();
-        this.overlay.remove();
-        this.applicationTab.remove();
+    getName: function(){
+        return this.applicationDefinition.name;
     },
 
     activate: function(zIndex){
         this.active = true;
-        this.applicationTab.opacity(1);
-        this.documentList.show();
+        this.applicationTab.addClass('active');
+        this.documentList.addClass('active');
 
         if (this.activeDocument !== null)
             this.activeDocument.activate();
@@ -96,22 +38,29 @@ var Application = Class.extend({
 
     deactivate: function(zIndex){
         this.active = false;
-        this.applicationTab.opacity(0.625);
-        this.documentList.hide();
+        this.applicationTab.removeClass('active');
+        this.documentList.removeClass('active');
 
-        if (this.activeDocument !== null) {
-            if (this.isFullscreen === true)
-                this.activeDocument.deactivateApplicationFullscreen();
-            else
-                this.activeDocument.deactivateApplicationWall();
-        }
+        if (this.activeDocument !== null)
+            this.activeDocument.deactivate();
 
         this.setZIndexes(zIndex);
     },
 
+    remove: function(){
+        for (var i = 0; i < this.documents.length; i++)
+            this.documents[i].remove();
+
+        this.documents = null;
+
+        this.documentList.remove();
+        this.overlay.remove();
+        this.applicationTab.remove();
+    },
+
     addDocument: function(document) {
         this.documents.push(document);
-        document.getDocumentTab().prependTo(this.documentList);
+        document.getDocumentTab().appendTo(this.documentList);
         document.setZIndex(this.zIndex);
         this.activateDocument(document);
     },
@@ -138,13 +87,8 @@ var Application = Class.extend({
 
         if (document === null) {
             this.activeDocument = null;
-            if (this.isFullscreen === false)
-                this.overlay.hide();
             return;
         }
-
-        if (this.overlay.css('display') === 'none')
-            this.overlay.show();
 
         document.activate();
 
@@ -210,30 +154,12 @@ var Application = Class.extend({
     // to be displayed.
 
     fullscreen: function() {
-        $('body').addClass('fullscreen');
         this.isFullscreen = true;
-        this.overlay.hide();
-
-        if (this.active === false) {
-            if (this.activeDocument !== null)
-                this.activeDocument.hide();
-        }
-
         this.resize();
     },
 
     wall: function(){
-        $('body').removeClass('fullscreen');
         this.isFullscreen = false;
-
-        if (this.active === false) {
-            if (this.activeDocument !== null)
-                this.activeDocument.show();
-        }
-
-        if (this.activeDocument !== null)
-            this.overlay.show();
-
         this.resize();
     },
 

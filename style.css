@@ -1,0 +1,44 @@
+body, input {
+    font-family: 'Droid Sans'; 
+    font-size: 12px;
+
+    color: #fff;
+}
+
+div#wall {
+    /*background: url('resources/abstract_0093.jpg');*/
+    background-color: #013;
+}
+
+div.bar {
+    background-color: rgb(128, 128, 128);
+    color: rgba(0,0,0,0.625);
+}
+
+div.bar .active {
+    background-color: #fff;
+    color: rgba(0,0,0,1);
+}
+
+div.bar input {
+    color: #000;
+}
+
+table#applicationGrid td {
+    background-color: #000;
+}
+
+table#applicationGrid td:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+div#search {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 20px;
+}
+
+#searchBox {
+    font-size: 24pt;
+}

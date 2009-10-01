@@ -46,10 +46,6 @@ $.isClick = function(x1, y1, x2, y2, limit) {
         (Math.abs(y2 - y1) <= limit));
 }
 
-$.create = function(element) {
-    return $(document.createElement(element));
-}
-
 // Used to keep a box within e.g. the screen range. Has to be called once for
 // left (a) and right (b), and another time for top (a) and bottom (b). Returns
 // the value to be used for left (a) or top (a), respectively.
@@ -63,3 +59,17 @@ $.range = function(a, b, lower, upper) {
         return a;
 }
 })(jQuery);
+
+function roundedRect(ctx,x,y,width,height,radius){
+  ctx.beginPath();
+  ctx.moveTo(x,y+radius);
+  ctx.lineTo(x,y+height-radius);
+  ctx.quadraticCurveTo(x,y+height,x+radius,y+height);
+  ctx.lineTo(x+width-radius,y+height);
+  ctx.quadraticCurveTo(x+width,y+height,x+width,y+height-radius);
+  ctx.lineTo(x+width,y+radius);
+  ctx.quadraticCurveTo(x+width,y,x+width-radius,y);
+  ctx.lineTo(x+radius,y);
+  ctx.quadraticCurveTo(x,y,x,y+radius);
+  ctx.stroke();
+}

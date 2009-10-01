@@ -1,0 +1,172 @@
+* {
+    cursor: default;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    overflow: hidden;
+}
+
+div#wall {
+    position: absolute;
+    z-index: -1;
+}
+
+body.fullscreen div#wall {
+    display: none;
+}
+
+input {
+    outline: none;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+}
+
+div.bar {
+    position: absolute;
+    z-index: 1000;
+    line-height: 22px;
+}
+
+div.bar nav a {
+    display: block;
+    float: left;
+    padding-left: 12px;
+    padding-right: 12px;
+    overflow: hidden;
+}
+
+div.bar input {
+    height: 22px;
+}
+
+div.bar input.text {
+    float: left;
+    height: 22px;
+    width: 100%;
+}
+
+div.bar input.squareButton {
+    float: left;
+    width: 22px;
+    opacity: 0.625;
+}
+
+div.bar input.squareButton:hover {
+    opacity: 1;
+}
+
+nav.documentList {
+    display: none;
+}
+
+nav.documentList.active {
+    display: block;
+}
+
+nav#documentList a {
+    /*display: none;*/
+    width: 180px;
+}
+
+/*nav#documentList a.active {
+    display: block;
+}*/
+
+div.right {
+    float: right;
+}
+
+nav#applicationList a {
+    width: 80px;
+}
+
+iframe.application {
+    border: 0;
+}
+
+iframe.application, div.applicationOverlay {
+    position: absolute;
+
+    -moz-transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    -moz-transform-origin: top left;
+    -webkit-transform-origin: top left;
+}
+
+iframe.application {
+    opacity: 0.75;
+}
+
+iframe.application.active {
+    opacity: 1;
+}
+
+body.fullscreen iframe.application,
+body.fullscreen div.applicationOverlay {
+    display: none;
+}
+
+body.fullscreen iframe.application.active {
+    display: block;
+}
+
+body.fullscreen iframe.application {
+    -moz-transform: none;
+    -webkit-transform: none;
+}
+
+div.applicationOverlay {
+    left: 200px;
+    top: 200px;
+}
+
+table#applicationGrid {
+    position: absolute;
+    z-index: 10000;
+    border-spacing: 0px;
+    display: none;
+}
+
+table#applicationGrid.active {
+    display: block;
+}
+
+table#applicationGrid td {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    opacity: 0.625;
+}
+
+table#applicationGrid td:hover {
+    opacity: 1;
+}
+
+div#clock {
+    padding-right: 8px;
+    opacity: 0.625;
+}
+
+div#search {
+    position: absolute;
+    display: none;
+    left: 50px;
+    top: 50px;
+    width: 1000px;
+    height: 400px;
+    z-index: 10000;
+}
+
+div#search.active {
+    display: block;
+}
+
+input#searchBox {
+    width: 100%;
+}

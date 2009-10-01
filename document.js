@@ -1,24 +1,19 @@
 var Document = Class.extend({
     init: function(url){
         this.url = url;
-        this.documentTab = $.create('a');
 
-        this.iframe = $.create('iframe')
+        this.documentTab = $(document.createElement('a')).documentTab(this.url);
+
+        this.iframe = $(document.createElement('iframe'))
             .addClass('application')
             .attr('src', this.url)
             .data('a', this.documentTab)
             .appendTo('body');
 
-        this.span = $.create('span').text(this.url);
-
-        this.input = $.create('input')
-            .hide()
-            .addClass('text');
-
         // Is there a better way to do this?
 
-        var input = this.input;
-        var span = this.span;
+        this.input = this.documentTab.find('input');
+        this.span = this.documentTab.find('span');
         var iframe = this.iframe;
 
         this.input.bind('keydown', function(e){
@@ -45,38 +40,18 @@ var Document = Class.extend({
     },
 
     remove: function(){
-        this.iframe.remove();
         this.documentTab.remove();
+        this.iframe.remove();
     },
 
     activate: function(){
-        this.documentTab.opacity(1);
-        this.iframe
-            .opacity(1)
-            .show();
+        this.documentTab.addClass('active');
+        this.iframe.addClass('active');
     },
 
     deactivate: function(){
-        this.documentTab.opacity(0.625);
-        this.iframe.hide();
-    },
-
-    deactivateApplicationFullscreen: function(){
-        this.iframe
-            .hide()
-            .css('opacity', 0.625);
-    },
-
-    deactivateApplicationWall: function(){
-        this.iframe.fadeToExpo(500, 0.625);
-    },
-
-    hide: function(){
-        this.iframe.hide();
-    },
-
-    show: function(){
-        this.iframe.show();
+        this.documentTab.removeClass('active');
+        this.iframe.removeClass('active');
     },
 
     setZIndex: function(zIndex){
