@@ -108,6 +108,10 @@ var Brevity = Class.extend({
         this.activeApplication = application;
     },
 
+    getActiveApplication: function() {
+        return this.activeApplication;
+    },
+
     createDocument: function(application) {
         application.addDocument(new Document(application.getUrl()));
     },

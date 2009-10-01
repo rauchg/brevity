@@ -5,10 +5,10 @@ $.fn.documentBar = function(brevity) {
         var documentBar = $(this).bar('top');
 
         documentBar.find('input#newDocument').live('mousedown', function(){
-            //if (activeApplication !== null) {
-                brevity.createDocument(activeApplication);
+            if (brevity.getActiveApplication() !== null) {
+                brevity.createDocument(brevity.getActiveApplication());
                 $(window).trigger('resize');
-            //}
+            }
         });
 
         documentBar.find('canvas#toggleFullscreenCanvas').live('mousedown', function(){

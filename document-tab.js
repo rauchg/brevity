@@ -1,14 +1,17 @@
 (function($){
 
-$.fn.documentTab = function() {
+$.fn.documentTab = function(url) {
     return this.each(function(){
         var documentTab = $(this);
 
-        var span = $(document.createElement('span')).text(this.url);
+        var span = $(document.createElement('span'))
+            .text(url)
+            .appendTo(documentTab);
 
         var input = $(document.createElement('input'))
             .hide()
-            .addClass('text');
+            .addClass('text')
+            .appendTo(documentTab);
 
 
     });
