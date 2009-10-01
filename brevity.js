@@ -117,13 +117,15 @@ var Brevity = Class.extend({
     },
 
     removeApplication: function(application) {
-        for (var i = 0; i < applications.length; i++) {
+        for (var i = 0; i < this.applications.length; i++) {
             if (this.applications[i] === application) {
                 this.applications.remove(i);
                 break;
             }
         }
         application.remove();
+        if ((this.applications.length === 0) && $('body').hasClass('fullscreen'))
+            this.wall();
     },
 
     fullscreen: function() {

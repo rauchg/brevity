@@ -12,8 +12,6 @@ $.fn.documentTab = function(url) {
             .hide()
             .addClass('text')
             .appendTo(documentTab);
-
-
     });
 };
 
