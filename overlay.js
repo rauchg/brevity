@@ -18,6 +18,7 @@ $.fn.applicationOverlay = function(brevity, application) {
                     brevity.activateApplication(application);
             })
             .mousedown(function(e){
+                brevity.activateApplication(application);
                 overlay.addClass('drag');
 
                 var original = overlay.offset(),

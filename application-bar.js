@@ -4,18 +4,17 @@ $.fn.applicationBar = function(brevity) {
     return this.each(function(){
         var applicationBar = $(this).bar('bottom');
 
-        applicationBar.find('div#clock').clock();
-
         applicationBar.find('nav#applicationList')
-            .live('mouseover', function(e){
-                brevity.activateApplication($(e.target).data('application'));
-            })
             .live('mousedown', function(e){
                 var a = $(e.target);
+                var application = $(e.target).data('application');
 
                 switch (e.button) {
                     case 0:
-                        brevity.toggleFullscreen();
+                        if (brevity.getActiveApplication() === application)
+                            brevity.toggleFullscreen();
+                        else
+                            brevity.activateApplication(application);
                         break;
                     case 2:
                         brevity.removeApplication(a.data('application'));
@@ -34,6 +33,8 @@ $.fn.applicationBar = function(brevity) {
                     .css('top', $(this).offset().top - applicationGrid.height())
                     .addClass('active');
         });
+
+        applicationBar.find('div#clock').clock();
     });
 };
 

@@ -4,32 +4,36 @@ $.fn.documentList = function(application) {
     return this.each(function(){
         $(this)
             .addClass('documentList')
-            .bind('mouseover', function(e){
-                var item = $(e.target);
-                if (item.is('a'))
-                    application.activateDocument(item.data('document'));
-            })
             .bind('mousedown', function(e){
-                var item = $(e.target);
+                var element = $(e.target);
 
-                if (item.is('span'))
-                    item = item.parent();
+                if (element.is('input') === true)
+                    return;
+
+                var documentTab = element.data('documentTab');
+                var document_ = documentTab.getDocument();
 
                 switch (e.button) {
                 case 0:
-                    item.data('span').hide();
-                    item.data('input')
-                        .attr('value', 'http://www.')
-                        .show()
-                        .focus();
-
+                    if (application.getActiveDocument() === document_)
+                        documentTab.showInput();
+                    else
+                        application.activateDocument(document_);
                     break;
                 case 2:
-                    application.removeDocument(item.data('document'));
+                    application.removeDocument(document_);
                     break;
                 }
+            })
+            .bind('keypress', function(e){
+                var element = $(e.target);
 
-                e.preventDefault();
+                if (element.is('input') === false)
+                    return;
+
+                if (e.keyCode === 13) {
+                    element.data('documentTab').showTitle();
+                }
             });
     });
 };

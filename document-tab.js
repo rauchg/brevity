@@ -1,18 +1,40 @@
-(function($){
+var DocumentTab = Element.extend({
+    init: function(document_) {
+        this.document = document_;
 
-$.fn.documentTab = function(url) {
-    return this.each(function(){
-        var documentTab = $(this);
+        this.element = $(document.createElement('a'))
+            .data('documentTab', this);
 
-        var span = $(document.createElement('span'))
-            .text(url)
-            .appendTo(documentTab);
+        this.span = $(document.createElement('span'))
+            .data('documentTab', this)
+            .text(document_.getTitle())
+            .appendTo(this.element);
 
-        var input = $(document.createElement('input'))
-            .hide()
+        this.input = $(document.createElement('input'))
+            .data('documentTab', this)
             .addClass('text')
-            .appendTo(documentTab);
-    });
-};
+            .hide()
+            .appendTo(this.element);
+    },
 
-})(jQuery);
+    getDocument: function() {
+        return this.document;
+    },
+
+    showInput: function() {
+        this.span.hide();
+        this.input
+            .attr('value', 'http://www.')
+            .show()
+            .focus();
+    },
+
+    showTitle: function() {
+        this.input.hide();
+        this.span
+            .text(this.input.attr('value'))
+            .show();
+
+        this.document.setUrl(this.input.attr('value'));
+    }
+});

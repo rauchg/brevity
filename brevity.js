@@ -36,10 +36,11 @@ var Brevity = Class.extend({
         $('#documentBar').documentBar(this);
         $('#applicationBar').applicationBar(this);
         $('#applicationGrid').applicationGrid(this, appDefinitions);
-        $('#search').wallSearch(this);
+        //$('#search').wallSearch(this);
 
         var context = document.getElementById('toggleFullscreenCanvas').getContext('2d');
-        roundedRect(context, 2, 2, 18, 18, 4);
+        context.strokeStyle = 'rgba(255,255,255,0.625)';
+        roundedRect(context, 2, 2, 18, 18, 6);
         
         var applications = this.applications;
         $(window).resize(function(){
@@ -65,6 +66,10 @@ var Brevity = Class.extend({
 
         $(document).bind('keydown', 'alt+f', function(){
             brevity.toggleBars();
+        });
+
+        $(window).bind('contextmenu', function(){
+            return false;
         });
 
         $(window).trigger('resize');

@@ -1,78 +1,70 @@
 var Document = Class.extend({
     init: function(url){
         this.url = url;
+        this.documentTab = null;
 
-        this.documentTab = $(document.createElement('a')).documentTab(this.url);
-
-        this.iframe = $(document.createElement('iframe'))
-            .addClass('application')
+        this.element = $(document.createElement('iframe'))
             .attr('src', this.url)
-            .data('a', this.documentTab)
             .appendTo('body');
-
-        // Is there a better way to do this?
-
-        this.input = this.documentTab.find('input');
-        this.span = this.documentTab.find('span');
-        var iframe = this.iframe;
-
-        this.input.bind('keydown', function(e){
-            if (e.keyCode === 13) {
-                input.hide();
-                span
-                    .text(input.attr('value'))
-                    .show();
-                iframe.attr('src', input.attr('value'));
-            }
-        });
-
-        this.documentTab
-            .data('iframe', this.iframe)
-            .data('span', this.span)
-            .data('input', this.input)
-            .data('document', this)
-            .append(this.span)
-            .append(this.input);
     },
 
-    getDocumentTab: function(){
-        return this.documentTab;
+    setUrl: function(url) {
+        this.url = url;
+        this.element.attr('src', url);
+    },
+
+    setDocumentTab: function(documentTab){
+        this.documentTab = documentTab;
+    },
+
+    getTitle: function(){
+        return this.url;
     },
 
     remove: function(){
         this.documentTab.remove();
-        this.iframe.remove();
+        this.element.remove();
+    },
+
+    addActiveApplicationClass: function(){
+        this.element.addClass('activeApplication');
+    },
+
+    removeActiveApplicationClass: function(){
+        this.element.removeClass('activeApplication');
     },
 
     activate: function(){
-        this.documentTab.addClass('active');
-        this.iframe.addClass('active');
+        this.documentTab.activate();
+        this.element.addClass('activeDocument');
     },
 
     deactivate: function(){
-        this.documentTab.removeClass('active');
-        this.iframe.removeClass('active');
+        this.documentTab.deactivate();
+        this.element.removeClass('activeDocument');
     },
 
     setZIndex: function(zIndex){
-        this.iframe.css('zIndex', zIndex);
+        this.element.css('zIndex', zIndex);
     },
 
     move: function(left, top){
-        this.iframe
+        this.element
             .css('left', left)
             .css('top', top);
     },
 
     setVerticalBounds: function(top, height, animate){
-        this.iframe.stop({ clearQueue: true });
+        this.element.stop({ clearQueue: true });
         if (animate === true)
-            this.iframe.animate({ top: top, height: height }, 250);
+            this.element.animate({ top: top, height: height }, 250);
         else
-            this.iframe.css('top', top).css('height', height);
+            this.element
+                .css('top', top)
+                .css('height', height);
     },
 
     rectangle: function(rect){
-        this.iframe.rectangle(rect);
+        this.element.rectangle(rect);
     }
 });

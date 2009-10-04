@@ -6,6 +6,7 @@ var Application = Class.extend({
         this.applicationTab = applicationTab
             .data('application', this)
             .text(applicationDefinition.name);
+
         this.documentList = documentList.documentList(this);
         this.overlay = overlay.applicationOverlay(brevity, this);
         this.zIndex = zIndex;
@@ -13,7 +14,6 @@ var Application = Class.extend({
         this.active = false;
         this.documents = [];
         this.activeDocument = null;
-        this.isFullscreen = false;
         this.barsHidden = false;
     },
 
@@ -27,22 +27,26 @@ var Application = Class.extend({
 
     activate: function(zIndex){
         this.active = true;
-        this.applicationTab.addClass('active');
+
         this.documentList.addClass('active');
 
-        if (this.activeDocument !== null)
-            this.activeDocument.activate();
+        for (var i = 0; i < this.documents.length; i++)
+            this.documents[i].addActiveApplicationClass();
+
+        this.applicationTab.addClass('active');
 
         this.setZIndexes(zIndex);
     },
 
     deactivate: function(zIndex){
         this.active = false;
-        this.applicationTab.removeClass('active');
+
         this.documentList.removeClass('active');
 
-        if (this.activeDocument !== null)
-            this.activeDocument.deactivate();
+        for (var i = 0; i < this.documents.length; i++)
+            this.documents[i].removeActiveApplicationClass();
+
+        this.applicationTab.removeClass('active');
 
         this.setZIndexes(zIndex);
     },
@@ -58,11 +62,15 @@ var Application = Class.extend({
         this.applicationTab.remove();
     },
 
-    addDocument: function(document) {
-        this.documents.push(document);
-        document.getDocumentTab().appendTo(this.documentList);
-        document.setZIndex(this.zIndex);
-        this.activateDocument(document);
+    addDocument: function(document_) {
+        var documentTab = new DocumentTab(document_);
+        documentTab.appendTo(this.documentList);
+        document_.setDocumentTab(documentTab);
+        this.documents.push(document_);
+        document_.setZIndex(this.zIndex);
+        this.activateDocument(document_);
+        if (this.active === true)
+            document_.addActiveApplicationClass();
     },
 
     removeDocument: function(document) {
@@ -81,23 +89,23 @@ var Application = Class.extend({
             this.activateDocument(null);
     },
 
-    activateDocument: function(document) {
-        if (document === this.activeDocument)
+    activateDocument: function(document_) {
+        if (document_ === this.activeDocument)
             return;
 
-        if (document === null) {
+        if (document_ === null) {
             this.activeDocument = null;
             return;
         }
 
-        document.activate();
+        document_.activate();
 
         for (var i = 0; i < this.documents.length; i++) {
-            if (this.documents[i] !== document)
+            if (this.documents[i] !== document_)
                 this.documents[i].deactivate();
         }
 
-        this.activeDocument = document;
+        this.activeDocument = document_;
     },
 
     getActiveDocument: function() {
@@ -124,7 +132,7 @@ var Application = Class.extend({
     resize: function() {
         var rect = {};
 
-        if (this.isFullscreen === false) {
+        if ($('body').hasClass('fullscreen') === false) {
             rect.left = this.overlay.css('left');
             rect.top = this.overlay.css('top');
             rect.width = window.innerWidth / 2;
@@ -154,17 +162,15 @@ var Application = Class.extend({
     // to be displayed.
 
     fullscreen: function() {
-        this.isFullscreen = true;
         this.resize();
     },
 
     wall: function(){
-        this.isFullscreen = false;
         this.resize();
     },
 
     toggleFullscreen: function() {
-        if (this.isFullscreen === true)
+        if ($('body').hasClass('fullscreen') === true)
             this.wall();
         else
             this.fullscreen();
@@ -176,7 +182,7 @@ var Application = Class.extend({
         if (this.activeDocument === null)
             return;
 
-        if (this.isFullscreen === true) {
+        if ($('body').hasClass('fullscreen') === true) {
             var top, height;
 
             if (this.barsHidden === true) {
@@ -188,10 +194,12 @@ var Application = Class.extend({
                 height = window.innerHeight - 44;
             }
 
-            if (this.active === true)
-                this.activeDocument.setVerticalBounds(top, height, true);
-            else
-                this.activeDocument.setVerticalBounds(top, height);
+            for (var i = 0; i < this.documents.length; i++) {
+                if (this.active === true && this.documents[i] === this.activeDocument)
+                    this.activeDocument.setVerticalBounds(top, height, true);
+                else
+                    this.documents[i].setVerticalBounds(top, height);
+            }
         }
     }
 });

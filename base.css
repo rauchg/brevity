@@ -36,8 +36,8 @@ div.bar {
 div.bar nav a {
     display: block;
     float: left;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 11px;
+    padding-right: 11px;
     overflow: hidden;
 }
 
@@ -47,7 +47,7 @@ div.bar input {
 
 div.bar input.text {
     float: left;
-    height: 22px;
+    border: 0;
     width: 100%;
 }
 
@@ -69,28 +69,21 @@ nav.documentList.active {
     display: block;
 }
 
-nav#documentList a {
-    /*display: none;*/
-    width: 180px;
-}
-
-/*nav#documentList a.active {
-    display: block;
-}*/
-
 div.right {
     float: right;
 }
 
-nav#applicationList a {
-    width: 80px;
-}
+/*
+display is set to !important because there's a bug/feature in jQuery's animate()
+that adds 'display: block;' to the animated element.
+*/
 
-iframe.application {
+iframe {
     border: 0;
+    display: none !important;
 }
 
-iframe.application, div.applicationOverlay {
+iframe, div.applicationOverlay {
     position: absolute;
 
     -moz-transform: scale(0.5);
@@ -99,24 +92,22 @@ iframe.application, div.applicationOverlay {
     -webkit-transform-origin: top left;
 }
 
-iframe.application {
+iframe.activeDocument {
+    display: block !important;
     opacity: 0.75;
 }
 
-iframe.application.active {
+iframe.activeDocument.activeApplication {
     opacity: 1;
 }
 
-body.fullscreen iframe.application,
+body.fullscreen iframe,
 body.fullscreen div.applicationOverlay {
-    display: none;
+    display: none !important;
 }
 
-body.fullscreen iframe.application.active {
-    display: block;
-}
-
-body.fullscreen iframe.application {
+body.fullscreen iframe.activeDocument.activeApplication {
+    display: block !important;
     -moz-transform: none;
     -webkit-transform: none;
 }

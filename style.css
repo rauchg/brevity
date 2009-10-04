@@ -1,27 +1,30 @@
 body, input {
     font-family: 'Droid Sans'; 
-    font-size: 12px;
+    font-size: 13px;
 
     color: #fff;
 }
 
 div#wall {
-    /*background: url('resources/abstract_0093.jpg');*/
-    background-color: #013;
+    background-color: #123;
 }
 
 div.bar {
-    background-color: rgb(128, 128, 128);
-    color: rgba(0,0,0,0.625);
+    background-color: rgb(0, 0, 0);
+    color: rgba(255,255,255,0.625);
 }
 
-div.bar .active {
-    background-color: #fff;
-    color: rgba(0,0,0,1);
+div.bar nav a.active {
+    background: -webkit-gradient(linear, left top, left bottom, from(#555), to(#222));
+    color: #fff;
+}
+
+div.bar nav a:hover {
+    color: #acf;
 }
 
 div.bar input {
-    color: #000;
+    color: #fff;
 }
 
 table#applicationGrid td {
