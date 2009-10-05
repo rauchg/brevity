@@ -25,7 +25,34 @@ var appDefinitions = [
 ]];
 
 $(function(){
-    new Brevity();
+    var brevity = new Brevity();
+
+    $('#documentBar').documentBar(brevity);
+    $('#applicationBar').applicationBar(brevity);
+    $('#applicationGrid').applicationGrid(brevity, appDefinitions);
+        //$('#search').wallSearch(this);
+
+    $(window).bind('contextmenu', function(){
+        return false;
+    });
+
+    $(document).bind('keydown', 'ctrl+space', function(){
+        brevity.toggleFullscreen();
+    });
+
+    $(document).bind('keydown', 'space', function(){
+        brevity.fullscreen();
+    });
+
+    $(document).bind('keydown', 'alt+f', function(){
+        brevity.toggleBars();
+    });
+
+    $(window).resize(function(){
+        brevity.resize();
+    });
+
+    $(window).trigger('resize');
 });
 
 var Brevity = Class.extend({
@@ -33,46 +60,20 @@ var Brevity = Class.extend({
         this.applications = [];
         this.activeApplication = null;
 
-        $('#documentBar').documentBar(this);
-        $('#applicationBar').applicationBar(this);
-        $('#applicationGrid').applicationGrid(this, appDefinitions);
-        //$('#search').wallSearch(this);
-
         var context = document.getElementById('toggleFullscreenCanvas').getContext('2d');
         context.strokeStyle = 'rgba(255,255,255,0.625)';
         roundedRect(context, 2, 2, 18, 18, 6);
-        
-        var applications = this.applications;
-        $(window).resize(function(){
-            $('div#wall')
-                .css('left', 0)
-                .css('top', 0)
-                .css('width', window.innerWidth)
-                .css('height', window.innerHeight);
+    },
 
-            for (var i = 0; i < applications.length; i++)
-                applications[i].resize();
-        });
+    resize: function() {
+        $('div#wall')
+            .css('left', 0)
+            .css('top', 0)
+            .css('width', window.innerWidth)
+            .css('height', window.innerHeight);
 
-
-        var brevity = this;
-        $(document).bind('keydown', 'ctrl+space', function(){
-            brevity.toggleFullscreen();
-        });
-
-        $(document).bind('keydown', 'space', function(){
-            brevity.fullscreen();
-        });
-
-        $(document).bind('keydown', 'alt+f', function(){
-            brevity.toggleBars();
-        });
-
-        $(window).bind('contextmenu', function(){
-            return false;
-        });
-
-        $(window).trigger('resize');
+        for (var i = 0; i < applications.length; i++)
+            applications[i].resize();
     },
 
     createApplication: function(appDefinition) {
@@ -131,27 +132,30 @@ var Brevity = Class.extend({
         application.remove();
         if ((this.applications.length === 0) && $('body').hasClass('fullscreen'))
             this.wall();
+        else {
+            if (application === this.activeApplication)
+                this.activateApplication(this.applications[this.applications.length - 1]);
+        }
     },
 
     fullscreen: function() {
         $('body').addClass('fullscreen');
-
-        for (var i = 0; i < this.applications.length; i++)
-            this.applications[i].fullscreen();
+        this.resizeApplications();
     },
 
     wall: function() {
         $('body').removeClass('fullscreen');
-
-        for (var i = 0; i < this.applications.length; i++)
-            this.applications[i].wall();
+        this.resizeApplications();
     },
 
     toggleFullscreen: function(){
         $('body').toggleClass('fullscreen');
+        this.resizeApplications();
+    },
 
+    resizeApplications: function(){
         for (var i = 0; i < this.applications.length; i++)
-            this.applications[i].toggleFullscreen();
+            this.applications[i].resize();
     },
 
     toggleBars: function(){

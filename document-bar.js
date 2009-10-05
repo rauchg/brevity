@@ -7,7 +7,7 @@ $.fn.documentBar = function(brevity) {
         documentBar.find('input#newDocument').live('mousedown', function(){
             if (brevity.getActiveApplication() !== null) {
                 brevity.createDocument(brevity.getActiveApplication());
-                $(window).trigger('resize');
+                brevity.getActiveApplication().resize();
             }
         });
 

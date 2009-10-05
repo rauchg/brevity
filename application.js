@@ -116,7 +116,7 @@ var Application = Class.extend({
         for (var i = 0; i < this.documents.length; i++)
             this.documents[i].setZIndex(zIndex);
 
-        this.overlay.css('zIndex', zIndex + 1000);
+        this.overlay.css('zIndex', zIndex +  1000);
         this.zIndex = zIndex;
     },
 
@@ -156,24 +156,6 @@ var Application = Class.extend({
 
         for (var i = 0; i < this.documents.length; i++)
             this.documents[i].rectangle(rect);
-    },
-
-    // Runs for all applications when fullscreen occurs, not only for the one
-    // to be displayed.
-
-    fullscreen: function() {
-        this.resize();
-    },
-
-    wall: function(){
-        this.resize();
-    },
-
-    toggleFullscreen: function() {
-        if ($('body').hasClass('fullscreen') === true)
-            this.wall();
-        else
-            this.fullscreen();
     },
 
     toggleBars: function() {

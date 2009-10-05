@@ -21,10 +21,10 @@ $.fn.applicationGrid = function(brevity, applicationDefinitions) {
             application = brevity.createApplication(appDefinition);
             brevity.createDocument(application);
             brevity.activateApplication(application);
-            brevity.wall();
+            application.resize();
         });
 
-        $('#wall').live('click', function(e){
+        $('#wall').live('mousedown', function(e){
             if (applicationGrid.hasClass('active') === true)
                 applicationGrid.removeClass('active');
             else {

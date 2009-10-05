@@ -4,7 +4,7 @@ $.fn.documentList = function(application) {
     return this.each(function(){
         $(this)
             .addClass('documentList')
-            .bind('mousedown', function(e){
+            .bind('mouseup', function(e){
                 var element = $(e.target);
 
                 if (element.is('input') === true)
