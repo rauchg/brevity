@@ -25,22 +25,6 @@ $.fn.rectangle = function(rect) {
     });
 };
 
-$.fn.fadeToExpo = function(duration, opacity) {
-    return this.each(function(){
-        $(this)
-            .stop({ clearQueue: true })
-            .animate({ opacity: opacity }, duration, 'easeOutExpo');
-    });
-}
-
-$.fn.opacity = function(opacity) {
-    return this.each(function(){
-        $(this)
-            .stop({ clearQueue: true })
-            .css('opacity', opacity);
-    });
-}
-
 $.isClick = function(x1, y1, x2, y2, limit) {
     return ((Math.abs(x2 - x1) <= limit) &&
         (Math.abs(y2 - y1) <= limit));

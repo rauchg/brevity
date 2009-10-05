@@ -25,7 +25,9 @@ var DocumentTab = Element.extend({
         this.span.hide();
         this.input
             .attr('value', 'http://www.')
-            .show()
+            .show();
+
+        this.input
             .focus();
     },
 
