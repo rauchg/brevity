@@ -1,13 +1,10 @@
 var DocumentTab = Element.extend({
-    init: function(document_) {
-        this.document = document_;
-
+    init: function() {
         this.element = $(document.createElement('a'))
             .data('documentTab', this);
 
         this.span = $(document.createElement('span'))
             .data('documentTab', this)
-            .text(document_.getTitle())
             .appendTo(this.element);
 
         this.input = $(document.createElement('input'))
@@ -17,8 +14,12 @@ var DocumentTab = Element.extend({
             .appendTo(this.element);
     },
 
+    setDocument: function(document_) {
+        this._document = document_;
+    },
+
     getDocument: function() {
-        return this.document;
+        return this._document;
     },
 
     showInput: function() {
@@ -38,5 +39,9 @@ var DocumentTab = Element.extend({
             .show();
 
         this.document.setUrl(this.input.attr('value'));
+    },
+
+    setTitle: function(title) {
+        this.span.text(title);
     }
 });

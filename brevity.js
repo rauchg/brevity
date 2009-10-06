@@ -1,68 +1,7 @@
-var appDefinitions = [
-[
-    {  name: 'Search',
-       url: 'http://www.google.com/' },
-    {  name: 'Type',
-       url: 'applications/type.html' },
-    {  name: 'Photo',
-       url: 'http://www.flickr.com/' }
-],
-[
-    {  name: 'Music',
-       url: 'http://www.rollingstone.com' },
-    {  name: 'Web',
-       url: 'http://www.google.com/' },
-    {  name: 'Photo',
-       url: 'applications/photo.html' }
-],
-[
-    {  name: 'Search',
-       url: 'http://www.google.com/' },
-    {  name: 'Search',
-       url: 'http://www.google.com/' },
-    {  name: 'Search',
-       url: 'http://www.google.com/' }
-]];
-
-$(function(){
-    var brevity = new Brevity();
-
-    $('#documentBar').documentBar(brevity);
-    $('#applicationBar').applicationBar(brevity);
-    $('#applicationGrid').applicationGrid(brevity, appDefinitions);
-        //$('#search').wallSearch(this);
-
-    $(window).bind('contextmenu', function(){
-        return false;
-    });
-
-    $(document).bind('keydown', 'ctrl+space', function(){
-        brevity.toggleFullscreen();
-    });
-
-    $(document).bind('keydown', 'space', function(){
-        brevity.fullscreen();
-    });
-
-    $(document).bind('keydown', 'alt+f', function(){
-        brevity.toggleBars();
-    });
-
-    $(window).resize(function(){
-        brevity.resize();
-    });
-
-    $(window).trigger('resize');
-});
-
 var Brevity = Class.extend({
     init: function(){
         this.applications = [];
         this.activeApplication = null;
-
-        var context = document.getElementById('toggleFullscreenCanvas').getContext('2d');
-        context.strokeStyle = 'rgba(255,255,255,0.625)';
-        roundedRect(context, 2, 2, 18, 18, 6);
     },
 
     resize: function() {
@@ -72,25 +11,19 @@ var Brevity = Class.extend({
             .css('width', window.innerWidth)
             .css('height', window.innerHeight);
 
-        for (var i = 0; i < applications.length; i++)
-            applications[i].resize();
+        for (var i = 0; i < this.applications.length; i++)
+            this.applications[i].resize();
     },
 
-    createApplication: function(appDefinition) {
-        var documentList = $(document.createElement('nav'))
-            .appendTo($('#documentBar'));
-        var applicationTab = $(document.createElement('a'))
-            .appendTo($('#applicationList'));
-        var overlay = $(document.createElement('div'))
-            .appendTo('body');
-
+    createApplication: function(applicationDefinition) {
         var application = new Application(
             this,
-            appDefinition,
-            documentList,
-            applicationTab,
-            overlay,
+            applicationDefinition,
             this.applications.length);
+
+        application.getOverlay().appendTo('body');
+        application.getApplicationTab().appendTo('nav#applicationList');
+        application.getDocumentList().appendTo('div#documentBar');
 
         this.applications.push(application);
 
@@ -119,7 +52,10 @@ var Brevity = Class.extend({
     },
 
     createDocument: function(application) {
-        application.addDocument(new Document(application.getUrl()));
+        var document_ = new Document(new DocumentTab());
+        document_.appendTo('body');
+        application.addDocument(document_);
+        application.activateDocument(document_);
     },
 
     removeApplication: function(application) {
@@ -141,6 +77,10 @@ var Brevity = Class.extend({
     fullscreen: function() {
         $('body').addClass('fullscreen');
         this.resizeApplications();
+    },
+
+    isFullscreen: function() {
+        return $('body').hasClass('fullscreen');
     },
 
     wall: function() {

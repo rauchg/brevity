@@ -1,24 +1,22 @@
-var Document = Class.extend({
-    init: function(url){
-        this.url = url;
-        this.documentTab = null;
+var Document = Element.extend({
+    init: function(documentTab){
+        this.documentTab = documentTab;
 
-        this.element = $(document.createElement('iframe'))
-            .attr('src', this.url)
-            .appendTo('body');
+        // Set object reference to be used in the delegation event handler for
+        // document list.
+
+        documentTab.setDocument(this);
+
+        this.element = $(document.createElement('iframe'));
     },
 
     setUrl: function(url) {
-        this.url = url;
         this.element.attr('src', url);
+        this.documentTab.setTitle(url);
     },
 
-    setDocumentTab: function(documentTab){
-        this.documentTab = documentTab;
-    },
-
-    getTitle: function(){
-        return this.url;
+    getDocumentTab: function(){
+        return this.documentTab;
     },
 
     remove: function(){

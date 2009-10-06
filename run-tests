@@ -1,1 +1,2 @@
-java -jar JsTestDriver.jar --tests all
+java -jar JsTestDriver.jar --reset
+java -jar JsTestDriver.jar --captureConsole --tests all

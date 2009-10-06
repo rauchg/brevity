@@ -1,20 +1,40 @@
 var Application = Class.extend({
-    init: function(brevity, applicationDefinition, documentList, applicationTab, overlay, zIndex){
-
+    init: function(brevity, applicationDefinition, zIndex){
+        this._brevity = brevity;
         this.applicationDefinition = applicationDefinition;
-
-        this.applicationTab = applicationTab
-            .data('application', this)
-            .text(applicationDefinition.name);
-
-        this.documentList = documentList.documentList(this);
-        this.overlay = overlay.applicationOverlay(brevity, this);
         this.zIndex = zIndex;
 
         this.active = false;
         this.documents = [];
         this.activeDocument = null;
+
         this.barsHidden = false;
+
+        this.initElements();
+    },
+
+    initElements: function(){
+        this.overlay = $(document.createElement('div'))
+            .applicationOverlay(this._brevity, this);
+
+        this.applicationTab = $(document.createElement('a'))
+            .data('application', this)
+            .text(this.applicationDefinition.name);
+
+        this.documentList = $(document.createElement('nav'))
+            .documentList(this);
+    },
+
+    getOverlay: function(){
+        return this.overlay;
+    },
+
+    getApplicationTab: function(){
+        return this.applicationTab;
+    },
+
+    getDocumentList: function(){
+        return this.documentList;
     },
 
     getUrl: function(){
@@ -63,14 +83,14 @@ var Application = Class.extend({
     },
 
     addDocument: function(document_) {
-        var documentTab = new DocumentTab(document_);
-        documentTab.appendTo(this.documentList);
-        document_.setDocumentTab(documentTab);
-        this.documents.push(document_);
+        document_.getDocumentTab().appendTo(this.documentList);
+        document_.setUrl(this.applicationDefinition.url);
         document_.setZIndex(this.zIndex);
-        this.activateDocument(document_);
+
         if (this.active === true)
             document_.addActiveApplicationClass();
+
+        this.documents.push(document_);
     },
 
     removeDocument: function(document) {
@@ -132,7 +152,7 @@ var Application = Class.extend({
     resize: function() {
         var rect = {};
 
-        if ($('body').hasClass('fullscreen') === false) {
+        if (this._brevity.isFullscreen() === false) {
             rect.left = this.overlay.css('left');
             rect.top = this.overlay.css('top');
             rect.width = window.innerWidth / 2;

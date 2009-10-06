@@ -1,19 +1,22 @@
-DocumentTabTest = TestCase('DocumentTabTest');
+TestCase('DocumentTabTest', {
+    setUp: function(){
+        this._documentTab = new DocumentTab();
+    },
 
-DocumentTabTest.prototype.testDocumentTab = function() {
-    var documentTab = new DocumentTab(new MockDocument());
-    var nav = $(document.createElement('nav'));
+    testDocumentTab: function() {
+        var nav = $(document.createElement('nav'));
 
-    documentTab.appendTo(nav);
-    documentTab.activate();
+        this._documentTab.appendTo(nav);
+        this._documentTab.activate();
 
-    assertTrue(nav.children().length === 1);
-    assertTrue(documentTab.get().hasClass('active') === true);
-};
+        assertTrue(nav.children().length === 1);
+        assertTrue(this._documentTab.get().hasClass('active') === true);
+    },
 
-// Used in event delegation to get access to the object through the element.
+    // Used in event delegation to get access to the object through the element.
 
-DocumentTabTest.prototype.testObjectData = function() {
-    var documentTab = new DocumentTab(new MockDocument());
-    assertTrue(documentTab === documentTab.get().data('documentTab'));
-};
+    testObjectData: function() {
+        assertTrue(this._documentTab === this._documentTab.get().data('documentTab'));
+    }
+});
+
