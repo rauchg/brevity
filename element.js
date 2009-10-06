@@ -11,6 +11,10 @@ var Element = Class.extend({
         this.element.removeClass('active');
     },
 
+    isActive: function() {
+        return this.element.hasClass('active');
+    },
+
     remove: function() {
         this.element.remove();
     },

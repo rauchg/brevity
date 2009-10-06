@@ -29,8 +29,10 @@ $(function(){
 
     $('#documentBar').documentBar(brevity);
     $('#applicationBar').applicationBar(brevity);
-    $('#applicationGrid').applicationGrid(brevity, applicationDefinitions);
     //$('#search').wallSearch(this);
+
+    var applicationGrid = new ApplicationGrid(brevity, applicationDefinitions);
+    applicationGrid.appendTo('body');
 
     var context = document.getElementById('toggleFullscreenCanvas').getContext('2d');
     context.strokeStyle = 'rgba(255,255,255,0.625)';
@@ -57,5 +59,22 @@ $(function(){
     });
 
     $(window).trigger('resize');
+
+    $('#wall').live('mousedown', function(e){
+        if (applicationGrid.isActive() === true) {
+            applicationGrid.deactivate();
+            return;
+        }
+
+        var left = e.clientX - (applicationGrid.get().width() / 2);
+        var top = e.clientY - (applicationGrid.get().height() / 2);
+
+        applicationGrid.get()
+            .css('left', $.range(left, left + applicationGrid.get().width(), 0,
+                window.innerWidth))
+            .css('top', $.range(top, top + applicationGrid.get().height(), 0,
+                window.innerHeight))
+            .addClass('active');
+    });
 });
 

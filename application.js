@@ -1,6 +1,6 @@
 var Application = Class.extend({
     init: function(brevity, applicationDefinition, zIndex){
-        this._brevity = brevity;
+        this.brevity = brevity;
         this.applicationDefinition = applicationDefinition;
         this.zIndex = zIndex;
 
@@ -15,7 +15,7 @@ var Application = Class.extend({
 
     initElements: function(){
         this.overlay = $(document.createElement('div'))
-            .applicationOverlay(this._brevity, this);
+            .applicationOverlay(this.brevity, this);
 
         this.applicationTab = $(document.createElement('a'))
             .data('application', this)
@@ -152,7 +152,7 @@ var Application = Class.extend({
     resize: function() {
         var rect = {};
 
-        if (this._brevity.isFullscreen() === false) {
+        if (this.brevity.isFullscreen() === false) {
             rect.left = this.overlay.css('left');
             rect.top = this.overlay.css('top');
             rect.width = window.innerWidth / 2;

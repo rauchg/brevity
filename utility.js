@@ -1,11 +1,12 @@
 // Array Remove - By John Resig (MIT Licensed)
 Array.prototype.remove = function(from, to) {
-  var rest = this.slice((to || from) + 1 || this.length);
-  this.length = from < 0 ? this.length + from : from;
-  return this.push.apply(this, rest);
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
 };
 
 (function($){
+
 $.fn.rectangle = function(rect) {
     if (rect === undefined) {
         return {
@@ -30,30 +31,33 @@ $.isClick = function(x1, y1, x2, y2, limit) {
         (Math.abs(y2 - y1) <= limit));
 }
 
-// Used to keep a box within e.g. the screen range. Has to be called once for
-// left (a) and right (b), and another time for top (a) and bottom (b). Returns
-// the value to be used for left (a) or top (a), respectively.
+// Makes sure that a line to be positioned within a longer line, isn't placed
+// before or after the outer line. Returns the adjusted start position.
+//
+// Useful for keeping a rectangle within the screen area. Has to be called once
+// for each of the axes.
 
-$.range = function(a, b, lower, upper) {
-    if (Math.max(a, lower) === lower)
-        return lower;
-    else if (Math.min(b, upper) === upper)
-        return upper - (b - a);
+$.range = function(from1, to1, from2, to2) {
+    if (Math.max(from1, from2) === from2)
+        return from2;
+    else if (Math.min(to1, to2) === to2)
+        return to2 - (to1 - from1);
     else
-        return a;
+        return from1;
 }
+
 })(jQuery);
 
-function roundedRect(ctx,x,y,width,height,radius){
-  ctx.beginPath();
-  ctx.moveTo(x,y+radius);
-  ctx.lineTo(x,y+height-radius);
-  ctx.quadraticCurveTo(x,y+height,x+radius,y+height);
-  ctx.lineTo(x+width-radius,y+height);
-  ctx.quadraticCurveTo(x+width,y+height,x+width,y+height-radius);
-  ctx.lineTo(x+width,y+radius);
-  ctx.quadraticCurveTo(x+width,y,x+width-radius,y);
-  ctx.lineTo(x+radius,y);
-  ctx.quadraticCurveTo(x,y,x,y+radius);
-  ctx.stroke();
+function roundedRect(context, x, y, width, height, radius){
+    context.beginPath();
+    context.moveTo(x, y + radius);
+    context.lineTo(x, y + height - radius);
+    context.quadraticCurveTo(x, y + height, x + radius, y + height);
+    context.lineTo(x + width - radius, y + height);
+    context.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+    context.lineTo(x + width, y + radius);
+    context.quadraticCurveTo(x + width, y, x + width - radius, y);
+    context.lineTo(x + radius, y);
+    context.quadraticCurveTo(x, y, x, y + radius);
+    context.stroke();
 }

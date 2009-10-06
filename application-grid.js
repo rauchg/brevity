@@ -1,45 +1,41 @@
-(function($){
+var ApplicationGrid = Element.extend({
+    init: function(brevity, applicationDefinitions){
+        this.brevity = brevity;
+        this.applicationDefinitions = applicationDefinitions;
+        
+        this.element = $(document.createElement('table'))
+            .attr('id', 'applicationGrid');
 
-$.fn.applicationGrid = function(brevity, applicationDefinitions) {
-    return this.each(function(){
-        var applicationGrid = $(this);
+        this.initGrid();
+        this.initEvents();
+    },
 
-        for (var i = 0; i < applicationDefinitions.length; i++) {
+    initGrid: function(){
+        for (var i = 0; i < this.applicationDefinitions.length; i++) {
             var row = $(document.createElement('tr'));
-            for (var j = 0; j < applicationDefinitions[i].length; j++) {
+            for (var j = 0; j < this.applicationDefinitions[i].length; j++) {
                 $(document.createElement('td'))
-                    .text(applicationDefinitions[i][j].name)
-                    .data('appDefinition', applicationDefinitions[i][j])
+                    .text(this.applicationDefinitions[i][j].name)
+                    .data('applicationDefinition', this.applicationDefinitions[i][j])
                     .appendTo(row);
             }
-            row.appendTo(applicationGrid);
+            row.appendTo(this.element);
         }
+    },
 
-        applicationGrid.click(function(e){
-            applicationGrid.removeClass('active');
-            var appDefinition = $(e.target).data('appDefinition'),
-            application = brevity.createApplication(appDefinition);
+    initEvents: function(){
+        var brevity = this.brevity;
+        var element = this.element;
+        this.element.click(function(e){
+            element.removeClass('active');
+
+            var application = brevity.createApplication(
+                $(e.target).data('applicationDefinition'));
+
             brevity.createDocument(application);
             brevity.activateApplication(application);
             application.resize();
         });
+    }
+});
 
-        $('#wall').live('mousedown', function(e){
-            if (applicationGrid.hasClass('active') === true)
-                applicationGrid.removeClass('active');
-            else {
-                var left = e.clientX - (applicationGrid.width() / 2);
-                var top = e.clientY - (applicationGrid.height() / 2);
-
-                applicationGrid
-                    .css('left', $.range(left, left + applicationGrid.width(), 0,
-                        window.innerWidth))
-                    .css('top', $.range(top, top + applicationGrid.height(), 0,
-                        window.innerHeight))
-                    .addClass('active');
-            }
-        });
-    });
-};
-
-})(jQuery);
