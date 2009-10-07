@@ -25,99 +25,135 @@ var applicationDefinitions = [
 ]];
 
 $(function(){
-    var wall = new Wall();
-    var documentBar = new DocumentBar();
-    var applicationBar = new ApplicationBar();
-    var brevity = new Brevity(wall, documentBar, applicationBar);
-    var applicationGrid = new ApplicationGrid(brevity, applicationDefinitions);
+    var main = new Main();
+});
 
-    wall.activate();
-    documentBar.activate();
-    applicationBar.activate();
+var Main = Class.extend({
+    init: function() {
+        this.initCreate();
+        this.initActivate();
+        this.initAppend();
+        this.initResizeable();
 
-    wall.appendTo('body');
-    documentBar.appendTo('body');
-    applicationBar.appendTo('body');
-    applicationGrid.appendTo('body');
+        this.initWindowEvents();
+        this.initKeyEvents();
+        this.initMouseEvents();
 
-    var resizeable = [
-        wall,
-        documentBar,
-        applicationBar,
-        brevity
-    ];
+        $(window).trigger('resize');
+    },
 
-    $(window).bind('contextmenu', function(){
-        return false;
-    });
+    initCreate: function() {
+        this.wall = new Wall();
+        this.documentBar = new DocumentBar();
+        this.applicationBar = new ApplicationBar();
+        this.brevity = new Brevity(this.wall, this.documentBar, this.applicationBar);
+        this.applicationGrid = new ApplicationGrid(this.brevity, applicationDefinitions);
+    },
 
-    $(document).bind('keydown', 'ctrl+space', function(){
-        brevity.toggleFullscreen();
-    });
+    initActivate: function() {
+        this.wall.activate();
+        this.documentBar.activate();
+        this.applicationBar.activate();
+    },
 
-    $(document).bind('keydown', 'space', function(){
-        brevity.fullscreen();
-    });
+    initAppend: function() {
+        this.wall.appendTo('body');
+        this.documentBar.appendTo('body');
+        this.applicationBar.appendTo('body');
+        this.applicationGrid.appendTo('body');
+    },
 
-    $(document).bind('keydown', 'alt+f', function(){
-        applicationBar.toggle();
-        documentBar.toggle();
-        brevity.toggleBars();
-    });
+    initResizeable: function() {
+        this.resizeable = [
+            this.wall,
+            this.documentBar,
+            this.applicationBar,
+            this.brevity
+        ];
+    },
 
-    $(window).bind('resize', function(){
-        for (var i = 0; i < resizeable.length; i++)
-            resizeable[i].resize();
-    });
+    initWindowEvents: function() {
+        var that = this;
 
-    $(window).trigger('resize');
+        $(window).bind('contextmenu', function(){
+            return false;
+        });
 
-    wall.get().mousedown(function(e){
-        if (applicationGrid.isActive() === true) {
-            applicationGrid.deactivate();
-            return;
-        }
+        $(window).bind('resize', function(){
+            for (var i = 0; i < that.resizeable.length; i++)
+                that.resizeable[i].resize();
+        });
+    },
 
-        applicationGrid.setCenterPosition(e.clientX, e.clientY);
-        applicationGrid.activate();
-    });
+    initKeyEvents: function() {
+        var that = this;
 
-    documentBar.getNewDocumentButton().click(function(e){
-        if (brevity.getActiveApplication() !== null) {
-            brevity.createDocument(brevity.getActiveApplication());
-            brevity.getActiveApplication().resize();
-        }
-    });
+        $(document).bind('keydown', 'ctrl+space', function(){
+            that.brevity.toggleFullscreen();
+        });
 
-    documentBar.getToggleFullscreenButton().click(function(e){
-        brevity.toggleFullscreen();
-    });
+        $(document).bind('keydown', 'space', function(){
+            that.brevity.fullscreen();
+        });
 
-    applicationBar.getNewApplicationButton().click(function(e){
-        if (applicationGrid.isActive() === true) {
-            applicationGrid.deactivate();
-            return;
-        }
+        $(document).bind('keydown', 'alt+f', function(){
+            that.applicationBar.toggle();
+            that.documentBar.toggle();
+            that.brevity.toggleBars();
+        });
+    },
 
-        applicationGrid.setPosition(0, window.innerHeight - 22 - applicationGrid.get().height());
-        applicationGrid.activate();
-    });
+    initMouseEvents: function() {
+        var that = this;
 
-    applicationBar.getApplicationList().mousedown(function(e){
-        var element = $(e.target);
-        var application = element.data('application');
+        this.wall.get().mousedown(function(e){
+            if (that.applicationGrid.isActive() === true) {
+                that.applicationGrid.deactivate();
+                return;
+            }
 
-        switch (e.button) {
-            case 0:
-                if (application === brevity.getActiveApplication())
-                    brevity.toggleFullscreen();
-                else
-                    brevity.activateApplication(application);
-                break;
-            case 2:
-                brevity.removeApplication(application);
-                break;
-        }
-    });
+            that.applicationGrid.setCenterPosition(e.clientX, e.clientY);
+            that.applicationGrid.activate();
+        });
+
+        this.documentBar.getNewDocumentButton().click(function(e){
+            if (that.brevity.getActiveApplication() !== null) {
+                that.brevity.createDocument(that.brevity.getActiveApplication());
+                that.brevity.getActiveApplication().resize();
+            }
+        });
+
+        this.documentBar.getToggleFullscreenButton().click(function(e){
+            that.brevity.toggleFullscreen();
+        });
+
+        this.applicationBar.getNewApplicationButton().click(function(e){
+            if (that.applicationGrid.isActive() === true) {
+                that.applicationGrid.deactivate();
+                return;
+            }
+
+            that.applicationGrid.setPosition(0, window.innerHeight - 22 - that.applicationGrid.get().height());
+            that.applicationGrid.activate();
+        });
+
+        this.applicationBar.getApplicationList().mousedown(function(e){
+            var element = $(e.target);
+            var application = element.data('application');
+
+            switch (e.button) {
+                case 0:
+                    if (application === that.brevity.getActiveApplication())
+                        that.brevity.toggleFullscreen();
+                    else
+                        that.brevity.activateApplication(application);
+                    break;
+                case 2:
+                    that.brevity.removeApplication(application);
+                    break;
+            }
+        });
+    }
+
 });
 
