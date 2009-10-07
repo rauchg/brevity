@@ -24,16 +24,15 @@ var ApplicationGrid = Element.extend({
     },
 
     initEvents: function(){
-        var brevity = this.brevity;
-        var element = this.element;
+        var that = this;
         this.element.click(function(e){
-            element.removeClass('active');
+            that.deactivate();
 
-            var application = brevity.createApplication(
+            var application = that.brevity.createApplication(
                 $(e.target).data('applicationDefinition'));
 
-            brevity.createDocument(application);
-            brevity.activateApplication(application);
+            that.brevity.createDocument(application);
+            that.brevity.activateApplication(application);
             application.resize();
         });
     }

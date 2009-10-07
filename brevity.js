@@ -99,9 +99,13 @@ var Brevity = Class.extend({
     },
 
     toggleBars: function(){
-        $('.bar').trigger('toggle');
+        $('div.bar').trigger('toggle');
 
         for (var i = 0; i < this.applications.length; i++)
             this.applications[i].toggleBars();
+    },
+
+    areBarsHidden: function(){
+        return $('div.bar').hasClass('hidden');
     }
 });

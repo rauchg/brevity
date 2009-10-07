@@ -1,14 +1,12 @@
 var Application = Class.extend({
-    init: function(brevity, applicationDefinition, zIndex){
+    init: function(brevity, applicationDefinition, initialZIndex){
         this.brevity = brevity;
-        this.applicationDefinition = applicationDefinition;
-        this.zIndex = zIndex;
+        this.name = applicationDefinition.name;
+        this.url = applicationDefinition.url;
+        this.zIndex = initialZIndex;
 
-        this.active = false;
         this.documents = [];
         this.activeDocument = null;
-
-        this.barsHidden = false;
 
         this.initElements();
     },
@@ -19,10 +17,22 @@ var Application = Class.extend({
 
         this.applicationTab = $(document.createElement('a'))
             .data('application', this)
-            .text(this.applicationDefinition.name);
+            .text(this.name);
 
         this.documentList = $(document.createElement('nav'))
             .documentList(this);
+    },
+
+    isActive: function(){
+        return this.brevity.getActiveApplication() === this;
+    },
+
+    getName: function(){
+        return this.name;
+    },
+
+    getUrl: function(){
+        return this.url;
     },
 
     getOverlay: function(){
@@ -37,17 +47,7 @@ var Application = Class.extend({
         return this.documentList;
     },
 
-    getUrl: function(){
-        return this.applicationDefinition.url;
-    },
-
-    getName: function(){
-        return this.applicationDefinition.name;
-    },
-
     activate: function(zIndex){
-        this.active = true;
-
         this.documentList.addClass('active');
 
         for (var i = 0; i < this.documents.length; i++)
@@ -59,8 +59,6 @@ var Application = Class.extend({
     },
 
     deactivate: function(zIndex){
-        this.active = false;
-
         this.documentList.removeClass('active');
 
         for (var i = 0; i < this.documents.length; i++)
@@ -84,10 +82,10 @@ var Application = Class.extend({
 
     addDocument: function(document_) {
         document_.getDocumentTab().appendTo(this.documentList);
-        document_.setUrl(this.applicationDefinition.url);
+        document_.setUrl(this.url);
         document_.setZIndex(this.zIndex);
 
-        if (this.active === true)
+        if (this.isActive() === true)
             document_.addActiveApplicationClass();
 
         this.documents.push(document_);
@@ -152,26 +150,28 @@ var Application = Class.extend({
     resize: function() {
         var rect = {};
 
-        if (this.brevity.isFullscreen() === false) {
-            rect.left = this.overlay.css('left');
-            rect.top = this.overlay.css('top');
-            rect.width = window.innerWidth / 2;
-            rect.height = window.innerHeight / 2;
+        if (this.brevity.isFullscreen() === true) {
+            rect = {
+                top: 0,
+                left: 0,
+                width: window.innerWidth,
+                height: window.innerHeight
+            }
 
-            this.overlay.rectangle(rect);
+            if (this.brevity.areBarsHidden() === false) {
+                rect.top += 22;
+                rect.height -= 44;
+            }
         }
         else {
-            rect.left = 0;
-            rect.width = window.innerWidth;
+            rect = {
+                left: this.overlay.css('left'),
+                top: this.overlay.css('top'),
+                width: window.innerWidth / 2,
+                height: window.innerHeight / 2
+            };
 
-            if (this.barsHidden === false) {
-                rect.top = 22;
-                rect.height = window.innerHeight - 44;
-            }
-            else {
-                rect.top = 0;
-                rect.height = window.innerHeight;
-            }
+            this.overlay.rectangle(rect);
         }
 
         for (var i = 0; i < this.documents.length; i++)
@@ -179,29 +179,25 @@ var Application = Class.extend({
     },
 
     toggleBars: function() {
-        this.barsHidden = !this.barsHidden;
-
-        if (this.activeDocument === null)
+        if (this.brevity.isFullscreen() === false)
             return;
 
-        if ($('body').hasClass('fullscreen') === true) {
-            var top, height;
+        var top = 0
+        var height = window.innerHeight;
 
-            if (this.barsHidden === true) {
-                top = 0;
-                height = window.innerHeight;
-            }
-            else {
-                top = 22;
-                height = window.innerHeight - 44;
-            }
+        if (this.brevity.areBarsHidden() === false) {
+            top += 22;
+            height -= 44;
+        }
 
-            for (var i = 0; i < this.documents.length; i++) {
-                if (this.active === true && this.documents[i] === this.activeDocument)
-                    this.activeDocument.setVerticalBounds(top, height, true);
-                else
-                    this.documents[i].setVerticalBounds(top, height);
-            }
+        for (var i = 0; i < this.documents.length; i++) {
+            var animate = false;
+
+            if (this.isActive() === true &&
+                this.documents[i] === this.activeDocument)
+                animate = true;
+
+            this.documents[i].setVerticalBounds(top, height, animate);
         }
     }
 });

@@ -32,7 +32,11 @@ $.fn.documentList = function(application) {
                     return;
 
                 if (e.keyCode === 13) {
-                    element.data('documentTab').showTitle();
+                    var documentTab = element.data('documentTab');
+                    var document_ = documentTab.getDocument();
+
+                    documentTab.showTitle();
+                    document_.setUrl(documentTab.getUrl());
                 }
             });
     });

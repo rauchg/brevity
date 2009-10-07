@@ -22,13 +22,15 @@ var DocumentTab = Element.extend({
         return this._document;
     },
 
+    getUrl: function() {
+        return this.input.attr('value');
+    },
+
     showInput: function() {
         this.span.hide();
         this.input
             .attr('value', 'http://www.')
-            .show();
-
-        this.input
+            .show()
             .focus();
     },
 
@@ -37,8 +39,6 @@ var DocumentTab = Element.extend({
         this.span
             .text(this.input.attr('value'))
             .show();
-
-        this.document.setUrl(this.input.attr('value'));
     },
 
     setTitle: function(title) {
