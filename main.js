@@ -116,16 +116,38 @@ var Main = Class.extend({
             that.applicationGrid.activate();
         });
 
+        this.applicationBar.getApplicationList().mouseenter(function(e){
+            $(this).data('activeApplicationSave', that.brevity.getActiveApplication());
+        });
+
+        this.applicationBar.getApplicationList().mouseover(function(e){
+            var element = $(e.target);
+            var application = element.data('application');
+            that.brevity.activateApplication(application);
+        });
+
+        this.applicationBar.getApplicationList().mouseleave(function(e){
+            var application = $(this).data('activeApplicationSave'); 
+
+            if (application !== null)
+                that.brevity.activateApplication(application);
+        });
+
         this.applicationBar.getApplicationList().mousedown(function(e){
             var element = $(e.target);
             var application = element.data('application');
+
+            $(this).data('activeApplicationSave', null);
 
             switch (e.button) {
                 case 0:
                     if (application === that.brevity.getActiveApplication())
                         that.brevity.toggleFullscreen();
-                    else
+                    else {
                         that.brevity.activateApplication(application);
+                        if (that.brevity.isFullscreen() === false)
+                            that.brevity.toggleFullscreen();
+                    }
                     break;
                 case 2:
                     that.brevity.removeApplication(application);
