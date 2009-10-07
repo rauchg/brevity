@@ -1,29 +1,3 @@
-var applicationDefinitions = [
-[
-    {  name: 'Search',
-       url: 'http://www.google.com/' },
-    {  name: 'Type',
-       url: 'applications/type.html' },
-    {  name: 'Photo',
-       url: 'http://www.flickr.com/' }
-],
-[
-    {  name: 'Music',
-       url: 'http://www.rollingstone.com' },
-    {  name: 'Web',
-       url: 'http://www.google.com/' },
-    {  name: 'Photo',
-       url: 'applications/photo.html' }
-],
-[
-    {  name: 'Search',
-       url: 'http://www.google.com/' },
-    {  name: 'Search',
-       url: 'http://www.google.com/' },
-    {  name: 'Search',
-       url: 'http://www.google.com/' }
-]];
-
 $(function(){
     var main = new Main();
 });
@@ -46,8 +20,13 @@ var Main = Class.extend({
         this.wall = new Wall();
         this.documentBar = new DocumentBar();
         this.applicationBar = new ApplicationBar();
-        this.brevity = new Brevity(this.wall, this.documentBar, this.applicationBar);
-        this.applicationGrid = new ApplicationGrid(this.brevity, applicationDefinitions);
+        this.brevity = new Brevity(
+            this.wall,
+            this.documentBar,
+            this.applicationBar);
+        this.applicationGrid = new ApplicationGrid(
+            this.brevity,
+            applicationDefinitions);
     },
 
     initActivate: function() {
@@ -154,6 +133,4 @@ var Main = Class.extend({
             }
         });
     }
-
 });
-
