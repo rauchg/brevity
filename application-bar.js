@@ -1,41 +1,37 @@
-(function($){
+var ApplicationBar = Bar.extend({
+    init: function() {
+        this._super();
 
-$.fn.applicationBar = function(brevity) {
-    return this.each(function(){
-        var applicationBar = $(this).bar('bottom');
+        this.newApplicationButton = $(document.createElement('input'))
+            .button('+')
+            .appendTo(this.element);
 
-        applicationBar.find('nav#applicationList')
-            .live('mousedown', function(e){
-                var a = $(e.target);
-                var application = $(e.target).data('application');
+        this.applicationList = $(document.createElement('nav'))
+            .appendTo(this.element);
 
-                switch (e.button) {
-                    case 0:
-                        if (brevity.getActiveApplication() === application)
-                            brevity.toggleFullscreen();
-                        else
-                            brevity.activateApplication(application);
-                        break;
-                    case 2:
-                        brevity.removeApplication(a.data('application'));
-                        break;
-                }
-            });
+        this.right = $(document.createElement('div'))
+            .addClass('right')
+            .appendTo(this.element);
 
-        applicationBar.find('input#newApplication').live('mousedown', function(){
-            var applicationGrid = $('#applicationGrid');
+        this.clock = $(document.createElement('div'))
+            .clock()
+            .appendTo(this.right);
+    },
 
-            if (applicationGrid.hasClass('active'))
-                applicationGrid.removeClass('active');
-            else
-                applicationGrid
-                    .css('left', 0)
-                    .css('top', $(this).offset().top - applicationGrid.height())
-                    .addClass('active');
-        });
+    getNewApplicationButton: function() {
+        return this.newApplicationButton;
+    },
 
-        applicationBar.find('div#clock').clock();
-    });
-};
+    getApplicationList: function() {
+        return this.applicationList;
+    },
 
-})(jQuery);
+    resize: function() {
+        this.element
+            .css('left', 0)
+            .css('top', window.innerHeight - 22)
+            .css('width', window.innerWidth)
+            .css('height', 22);
+    }
+});
+

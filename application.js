@@ -176,28 +176,5 @@ var Application = Class.extend({
 
         for (var i = 0; i < this.documents.length; i++)
             this.documents[i].rectangle(rect);
-    },
-
-    toggleBars: function() {
-        if (this.brevity.isFullscreen() === false)
-            return;
-
-        var top = 0
-        var height = window.innerHeight;
-
-        if (this.brevity.areBarsHidden() === false) {
-            top += 22;
-            height -= 44;
-        }
-
-        for (var i = 0; i < this.documents.length; i++) {
-            var animate = false;
-
-            if (this.isActive() === true &&
-                this.documents[i] === this.activeDocument)
-                animate = true;
-
-            this.documents[i].setVerticalBounds(top, height, animate);
-        }
     }
 });

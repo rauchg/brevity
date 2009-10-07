@@ -7,6 +7,13 @@ Array.prototype.remove = function(from, to) {
 
 (function($){
 
+$.fn.button = function(title) {
+    return $(this)
+        .addClass('button')
+        .attr('type', 'button')
+        .attr('value', title);
+}
+
 $.fn.rectangle = function(rect) {
     if (rect === undefined) {
         return {

@@ -1,16 +1,14 @@
 var Brevity = Class.extend({
-    init: function(){
+    init: function(wall, documentBar, applicationBar){
+        this.wall = wall;
+        this.documentBar = documentBar;
+        this.applicationBar = applicationBar;
+
         this.applications = [];
         this.activeApplication = null;
     },
 
     resize: function() {
-        $('div#wall')
-            .css('left', 0)
-            .css('top', 0)
-            .css('width', window.innerWidth)
-            .css('height', window.innerHeight);
-
         for (var i = 0; i < this.applications.length; i++)
             this.applications[i].resize();
     },
@@ -22,8 +20,8 @@ var Brevity = Class.extend({
             this.applications.length);
 
         application.getOverlay().appendTo('body');
-        application.getApplicationTab().appendTo('nav#applicationList');
-        application.getDocumentList().appendTo('div#documentBar');
+        application.getApplicationTab().appendTo(this.applicationBar.getApplicationList());
+        application.getDocumentList().appendTo(this.documentBar.get());
 
         this.applications.push(application);
 
@@ -99,13 +97,13 @@ var Brevity = Class.extend({
     },
 
     toggleBars: function(){
-        $('div.bar').trigger('toggle');
-
-        for (var i = 0; i < this.applications.length; i++)
-            this.applications[i].toggleBars();
+        if (this.isFullscreen() === true) {
+            for (var i = 0; i < this.applications.length; i++)
+                this.applications[i].resize();
+        }
     },
 
     areBarsHidden: function(){
-        return $('div.bar').hasClass('hidden');
+        return !($('div.bar').hasClass('active'));
     }
 });

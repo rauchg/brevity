@@ -52,16 +52,6 @@ var Document = Element.extend({
             .css('top', top);
     },
 
-    setVerticalBounds: function(top, height, animate){
-        this.element.stop({ clearQueue: true });
-        if (animate === true)
-            this.element.animate({ top: top, height: height }, 250);
-        else
-            this.element
-                .css('top', top)
-                .css('height', height);
-    },
-
     rectangle: function(rect){
         this.element.rectangle(rect);
     }

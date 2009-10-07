@@ -1,20 +1,34 @@
-(function($){
+var DocumentBar = Bar.extend({
+    init: function() {
+        this._super();
 
-$.fn.documentBar = function(brevity) {
-    return this.each(function(){
-        var documentBar = $(this).bar('top');
+        this.newDocumentButton = $(document.createElement('input'))
+            .button('+')
+            .appendTo(this.element);
 
-        documentBar.find('input#newDocument').live('mousedown', function(){
-            if (brevity.getActiveApplication() !== null) {
-                brevity.createDocument(brevity.getActiveApplication());
-                brevity.getActiveApplication().resize();
-            }
-        });
+        this.right = $(document.createElement('div'))
+            .addClass('right')
+            .appendTo(this.element);
 
-        documentBar.find('canvas#toggleFullscreenCanvas').live('mousedown', function(){
-            brevity.toggleFullscreen();
-        });
-    });
-};
+        this.toggleFullscreenButton = $(document.createElement('input'))
+            .button('[]')
+            .appendTo(this.right);
+    },
 
-})(jQuery);
+    getNewDocumentButton: function() {
+        return this.newDocumentButton;
+    },
+
+    getToggleFullscreenButton: function() {
+        return this.toggleFullscreenButton;
+    },
+
+    resize: function() {
+        this.element
+            .css('left', 0)
+            .css('top', 0)
+            .css('width', window.innerWidth)
+            .css('height', 22);
+    }
+});
+

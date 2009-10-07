@@ -25,18 +25,27 @@ var applicationDefinitions = [
 ]];
 
 $(function(){
-    var brevity = new Brevity();
-
-    $('#documentBar').documentBar(brevity);
-    $('#applicationBar').applicationBar(brevity);
-    //$('#search').wallSearch(this);
-
+    var wall = new Wall();
+    var documentBar = new DocumentBar();
+    var applicationBar = new ApplicationBar();
+    var brevity = new Brevity(wall, documentBar, applicationBar);
     var applicationGrid = new ApplicationGrid(brevity, applicationDefinitions);
+
+    wall.activate();
+    documentBar.activate();
+    applicationBar.activate();
+
+    wall.appendTo('body');
+    documentBar.appendTo('body');
+    applicationBar.appendTo('body');
     applicationGrid.appendTo('body');
 
-    var context = document.getElementById('toggleFullscreenCanvas').getContext('2d');
-    context.strokeStyle = 'rgba(255,255,255,0.625)';
-    roundedRect(context, 2, 2, 18, 18, 6);
+    var resizeable = [
+        wall,
+        documentBar,
+        applicationBar,
+        brevity
+    ];
 
     $(window).bind('contextmenu', function(){
         return false;
@@ -51,30 +60,64 @@ $(function(){
     });
 
     $(document).bind('keydown', 'alt+f', function(){
+        applicationBar.toggle();
+        documentBar.toggle();
         brevity.toggleBars();
     });
 
     $(window).bind('resize', function(){
-        brevity.resize();
+        for (var i = 0; i < resizeable.length; i++)
+            resizeable[i].resize();
     });
 
     $(window).trigger('resize');
 
-    $('#wall').live('mousedown', function(e){
+    wall.get().mousedown(function(e){
         if (applicationGrid.isActive() === true) {
             applicationGrid.deactivate();
             return;
         }
 
-        var left = e.clientX - (applicationGrid.get().width() / 2);
-        var top = e.clientY - (applicationGrid.get().height() / 2);
+        applicationGrid.setCenterPosition(e.clientX, e.clientY);
+        applicationGrid.activate();
+    });
 
-        applicationGrid.get()
-            .css('left', $.range(left, left + applicationGrid.get().width(), 0,
-                window.innerWidth))
-            .css('top', $.range(top, top + applicationGrid.get().height(), 0,
-                window.innerHeight))
-            .addClass('active');
+    documentBar.getNewDocumentButton().click(function(e){
+        if (brevity.getActiveApplication() !== null) {
+            brevity.createDocument(brevity.getActiveApplication());
+            brevity.getActiveApplication().resize();
+        }
+    });
+
+    documentBar.getToggleFullscreenButton().click(function(e){
+        brevity.toggleFullscreen();
+    });
+
+    applicationBar.getNewApplicationButton().click(function(e){
+        if (applicationGrid.isActive() === true) {
+            applicationGrid.deactivate();
+            return;
+        }
+
+        applicationGrid.setPosition(0, window.innerHeight - 22 - applicationGrid.get().height());
+        applicationGrid.activate();
+    });
+
+    applicationBar.getApplicationList().mousedown(function(e){
+        var element = $(e.target);
+        var application = element.data('application');
+
+        switch (e.button) {
+            case 0:
+                if (application === brevity.getActiveApplication())
+                    brevity.toggleFullscreen();
+                else
+                    brevity.activateApplication(application);
+                break;
+            case 2:
+                brevity.removeApplication(application);
+                break;
+        }
     });
 });
 
