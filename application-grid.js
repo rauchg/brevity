@@ -33,6 +33,15 @@ var ApplicationGrid = Element.extend({
 
             that.brevity.createDocument(application);
             that.brevity.activateApplication(application);
+
+            application.getOverlay()
+                .css('width', window.innerWidth / 2)
+                .css('height', window.innerHeight / 2);
+
+            application.getOverlay().positionScaled(0.5,
+                e.clientX - (application.getOverlay().width() / 4),
+                e.clientY - (application.getOverlay().height() / 4));
+
             application.resize();
         });
     }
