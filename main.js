@@ -116,28 +116,20 @@ var Main = Class.extend({
             that.applicationGrid.activate();
         });
 
-        this.applicationBar.getApplicationList().mouseenter(function(e){
-            $(this).data('activeApplicationSave', that.brevity.getActiveApplication());
-        });
-
         this.applicationBar.getApplicationList().mouseover(function(e){
             var element = $(e.target);
             var application = element.data('application');
-            that.brevity.activateApplication(application);
+            $('iframe').removeClass('preview');
+            application.addClass('preview');
         });
 
         this.applicationBar.getApplicationList().mouseleave(function(e){
-            var application = $(this).data('activeApplicationSave'); 
-
-            if (application !== null)
-                that.brevity.activateApplication(application);
+            $('iframe').removeClass('preview');
         });
 
         this.applicationBar.getApplicationList().mousedown(function(e){
             var element = $(e.target);
             var application = element.data('application');
-
-            $(this).data('activeApplicationSave', null);
 
             switch (e.button) {
                 case 0:

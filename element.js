@@ -15,6 +15,14 @@ var Element = Class.extend({
         return this.element.hasClass('active');
     },
 
+    addClass: function(class_){
+        this.element.addClass(class_);
+    },
+
+    removeClass: function(class_){
+        this.element.removeClass(class_);
+    },
+
     toggle: function() {
         this.element.toggleClass('active');
     },

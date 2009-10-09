@@ -14,33 +14,34 @@ $.fn.applicationOverlay = function(brevity, application) {
                 // 2. mouseover is sometimes triggered more than once on the
                 //    active div during drag.
 
-                if ($('div.applicationOverlay.drag').length === 0)
-                    brevity.activateApplication(application);
+                if ($('div.applicationOverlay.drag').length === 0) {
+                    $('iframe').removeClass('preview');
+                    application.addClass('preview');
+                }
+            })
+            .mouseleave(function(e){
+                application.removeClass('preview');
             })
             .mousedown(function(e){
+                brevity.activateApplication(application);
                 overlay.addClass('drag');
 
-                var original = overlay.offset(),
-                clickX = e.clientX,
-                clickY = e.clientY;
+                var overlayPosition = overlay.positionScaled(0.5);
+                var mouseDownLeft = e.clientX;
+                var mouseDownTop = e.clientY;
 
                 var document = $(document)
                     .bind('mousemove.drag', function(e){
-                        var moveX = e.clientX - clickX,
-                        moveY = e.clientY - clickY,
-                        left = original.left + moveX,
-                        top = original.top + moveY;
-
-                        application.move(left, top);
-                        overlay
-                            .css('left', left)
-                            .css('top', top);
+                        var left = overlayPosition.left + (e.clientX - mouseDownLeft);
+                        var top = overlayPosition.top + (e.clientY - mouseDownTop);
+                        application.positionScaled(0.5, left, top);
+                        overlay.positionScaled(0.5, left, top);
                     })
                     .bind('mouseup.drag', function(e){
                         overlay.removeClass('drag');
                         document.unbind('.drag');
 
-                        if ($.isClick(clickX, clickY, e.clientX, e.clientY, 3)
+                        if ($.isClick(mouseDownLeft, mouseDownTop, e.clientX, e.clientY, 3)
                             === true)
                             brevity.fullscreen();
                     });

@@ -49,22 +49,28 @@ var Application = Class.extend({
 
     activate: function(zIndex){
         this.documentList.addClass('active');
-
-        for (var i = 0; i < this.documents.length; i++)
-            this.documents[i].addActiveApplicationClass();
-
+        this.addClass('activeApplication');
+        this.overlay.addClass('activeApplication');
         this.applicationTab.addClass('active');
 
         this.setZIndexes(zIndex);
     },
 
+    addClass: function(class_){
+        for (var i = 0; i < this.documents.length; i++)
+            this.documents[i].addClass(class_);
+    },
+
+    removeClass: function(class_){
+        for (var i = 0; i < this.documents.length; i++)
+            this.documents[i].removeClass(class_);
+    },
+
     deactivate: function(zIndex){
         this.documentList.removeClass('active');
-
-        for (var i = 0; i < this.documents.length; i++)
-            this.documents[i].removeActiveApplicationClass();
-
+        this.removeClass('activeApplication');
         this.applicationTab.removeClass('active');
+        this.overlay.removeClass('activeApplication');
 
         this.setZIndexes(zIndex);
     },
@@ -86,7 +92,7 @@ var Application = Class.extend({
         document_.setZIndex(this.zIndex);
 
         if (this.isActive() === true)
-            document_.addActiveApplicationClass();
+            document_.addClass('activeApplication');
 
         this.documents.push(document_);
     },
@@ -142,9 +148,9 @@ var Application = Class.extend({
         return this.zIndex;
     },
 
-    move: function(left, top) {
+    positionScaled: function(scale, left, top) {
         for (var i = 0; i < this.documents.length; i++)
-            this.documents[i].move(left, top);
+            this.documents[i].positionScaled(scale, left, top);
     },
 
     resize: function() {

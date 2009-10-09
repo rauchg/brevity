@@ -7,6 +7,45 @@ Array.prototype.remove = function(from, to) {
 
 (function($){
 
+// Remove 'px' from css-value and convert to int.
+
+$.removePx = function(str) {
+    return parseInt(str.substr(0, str.length - 2), 10);
+}
+
+// Only works when position is set to absolute. offset() returns strage results
+// in WebKit when the element is transformed.
+
+$.fn.left = function() {
+    return $.removePx($(this).css('left'));
+}
+
+$.fn.top = function() {
+    return $.removePx($(this).css('top'));
+}
+
+// Gets or sets the position of a scaled element.
+
+$.fn.positionScaled = function(scale, left, top){
+    var element = $(this);
+
+    var scaledWidth = element.width() * scale;
+    var scaledHeight = element.height() * scale;
+
+    var offsetLeft = (element.width() / 2) - (scaledWidth / 2);
+    var offsetTop = (element.height() / 2) - (scaledHeight / 2);
+
+    if (left === undefined)
+        return {
+            left: element.left() + offsetLeft, 
+            top: element.top() + offsetTop
+        };
+    else
+        element
+            .css('left', left - offsetLeft)
+            .css('top', top - offsetTop);
+}
+
 $.fn.button = function(title) {
     return $(this)
         .addClass('button')

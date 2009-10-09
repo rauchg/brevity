@@ -6,7 +6,7 @@ body, input {
 }
 
 div#wall {
-    background-color: #08c;
+    background-color: #333;
     background: url('resources/lights.jpg');
 }
 

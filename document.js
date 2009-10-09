@@ -24,14 +24,6 @@ var Document = Element.extend({
         this.element.remove();
     },
 
-    addActiveApplicationClass: function(){
-        this.element.addClass('activeApplication');
-    },
-
-    removeActiveApplicationClass: function(){
-        this.element.removeClass('activeApplication');
-    },
-
     activate: function(){
         this.documentTab.activate();
         this.element.addClass('activeDocument');
@@ -46,10 +38,8 @@ var Document = Element.extend({
         this.element.css('zIndex', zIndex);
     },
 
-    move: function(left, top){
-        this.element
-            .css('left', left)
-            .css('top', top);
+    positionScaled: function(scale, left, top){
+        this.element.positionScaled(scale, left, top);
     },
 
     rectangle: function(rect){
