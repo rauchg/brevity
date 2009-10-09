@@ -11,12 +11,16 @@ div#wall {
 }
 
 div.bar {
-    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.5);
     color: rgba(255,255,255,0.625);
 }
 
+body.fullscreen div.bar {
+    background-color: #000;
+}
+
 div.bar nav a.active {
-    background: -webkit-gradient(linear, left top, left bottom, from(#555), to(#222));
+    background-color: rgba(255, 255, 255, 0.25);
     color: #fff;
 }
 
