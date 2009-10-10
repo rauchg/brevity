@@ -105,6 +105,8 @@ iframe.activeDocument {
 
 iframe.preview {
     opacity: 0.875;
+    -moz-transform: scale(0.425);
+    -webkit-transform: scale(0.425);
 }
 
 iframe.activeDocument.activeApplication {
