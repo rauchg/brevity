@@ -67,23 +67,17 @@ $.fn.positionScaled = function(scale, left, top){
             .css('top', top - offsetTop);
 }
 
-$.fn.button = function(title) {
-    return $(this)
-        .addClass('button')
-        .attr('type', 'button')
-        .attr('value', title);
-}
-
 $.fn.setPosition = function(left, top) {
     $(this)
         .css('left', left)
         .css('top', top);
 }
 
-$.fn.setCenterPosition = function(centerLeft, centerTop) {
+$.fn.positionAround = function(x, y) {
     var element = $(this);
-    var left = centerLeft - (element.width() / 2);
-    var top = centerTop - (element.height() / 2);
+
+    var left = x - (element.width() / 2);
+    var top = y - (element.height() / 2);
 
     element.setPosition(
         $.range(left, left + element.width(), 0, window.innerWidth),
@@ -108,6 +102,13 @@ $.fn.rectangle = function(rect) {
             .css('height', rect.height);
     });
 };
+
+$.fn.button = function(title) {
+    return $(this)
+        .addClass('button')
+        .attr('type', 'button')
+        .attr('value', title);
+}
 
 // Used to distinguish a click from a drag. x1, y1 is mousedown and x2, y2 is
 // mouseup.

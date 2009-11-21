@@ -31,8 +31,8 @@ var Element = Class.extend({
         this.element.setPosition(left, top);
     },
 
-    setCenterPosition: function(centerLeft, centerTop) {
-        this.element.setCenterPosition(centerLeft, centerTop);
+    positionAround: function(x, y) {
+        this.element.positionAround(x, y);
     },
 
     remove: function() {

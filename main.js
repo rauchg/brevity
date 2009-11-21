@@ -91,7 +91,7 @@ var Main = Class.extend({
                 return;
             }
 
-            that.applicationGrid.setCenterPosition(e.clientX, e.clientY);
+            that.applicationGrid.positionAround(e.clientX, e.clientY);
             that.applicationGrid.activate();
         });
 
