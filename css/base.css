@@ -86,9 +86,9 @@ that adds 'display: block;' to the animated element.
 iframe {
     border: 0;
     display: none !important;
-    -webkit-transition-property: -webkit-transform, opacity;
+    /*-webkit-transition-property: -webkit-transform, opacity;
     -webkit-transition-duration: 0.2s;
-    -webkit-transition-timing-funtion: ease-in;
+    -webkit-transition-timing-funtion: ease-in;*/
 }
 
 iframe, div.applicationOverlay {
@@ -113,7 +113,8 @@ iframe.activeDocument.activeApplication {
     opacity: 1;
 }
 
-iframe.activeDocument.activeApplication, div.applicationOverlay.activeApplication {
+iframe.activeDocument.activeApplication,
+div.applicationOverlay.activeApplication {
     -moz-transform: scale(0.5);
     -webkit-transform: scale(0.5);
 }
