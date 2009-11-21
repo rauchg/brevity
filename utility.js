@@ -74,6 +74,22 @@ $.fn.button = function(title) {
         .attr('value', title);
 }
 
+$.fn.setPosition = function(left, top) {
+    $(this)
+        .css('left', left)
+        .css('top', top);
+}
+
+$.fn.setCenterPosition = function(centerLeft, centerTop) {
+    var element = $(this);
+    var left = centerLeft - (element.width() / 2);
+    var top = centerTop - (element.height() / 2);
+
+    element.setPosition(
+        $.range(left, left + element.width(), 0, window.innerWidth),
+        $.range(top, top + element.height(), 0, window.innerHeight));
+}
+
 $.fn.rectangle = function(rect) {
     if (rect === undefined) {
         return {
