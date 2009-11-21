@@ -1,25 +1,25 @@
 var applicationDefinitions = [
 [
-    {  name: 'Search',
+    {  name: 'search',
        url: 'http://www.google.com/' },
-    {  name: 'Type',
+    {  name: 'type',
        url: 'applications/type.html' },
-    {  name: 'Photo',
+    {  name: 'photo',
        url: 'http://www.flickr.com/' }
 ],
 [
-    {  name: 'Music',
+    {  name: 'music',
        url: 'http://www.rollingstone.com' },
-    {  name: 'Web',
+    {  name: 'web',
        url: 'http://www.google.com/' },
-    {  name: 'Photo',
+    {  name: 'photo',
        url: 'applications/photo.html' }
 ],
 [
-    {  name: 'Search',
+    {  name: 'search',
        url: 'http://www.google.com/' },
-    {  name: 'Search',
-       url: 'http://www.google.com/' },
-    {  name: 'Search',
+    {  name: 'console',
+       url: 'http://localhost:8000/' },
+    {  name: 'search',
        url: 'http://www.google.com/' }
 ]];

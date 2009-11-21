@@ -13,8 +13,11 @@ $.removePx = function(str) {
     return parseInt(str.substr(0, str.length - 2), 10);
 }
 
-// Only works when position is set to absolute. offset() returns strage results
-// in WebKit when the element is transformed.
+// The four functions below works when position is absolute. offset() returns
+// strage results in WebKit when the element is transformed.
+//
+// width() and height() are defined by jQuery, but they don't work that well on
+// hidden elements.
 
 $.fn.left = function() {
     return $.removePx($(this).css('left'));
@@ -24,16 +27,34 @@ $.fn.top = function() {
     return $.removePx($(this).css('top'));
 }
 
-// Gets or sets the position of a scaled element.
+$.fn.width_ = function() {
+    return $.removePx($(this).css('width'));
+}
+
+$.fn.height_ = function() {
+    return $.removePx($(this).css('height'));
+}
+
+// Gets or sets the position of a scale-transformed element with
+// transformation-origin set to center. Accepts or returns a non-transformed
+// position.
+//
+// Position element at 10, 10:
+//
+// element.positionScaled(0.5, 10, 10);
+//
+// Get the position of the element:
+//
+// element.positionScaled(0.5); // Returns {left:10,top:10}:  
 
 $.fn.positionScaled = function(scale, left, top){
     var element = $(this);
 
-    var scaledWidth = element.width() * scale;
-    var scaledHeight = element.height() * scale;
+    var scaledWidth = element.width_() * scale;
+    var scaledHeight = element.height_() * scale;
 
-    var offsetLeft = (element.width() / 2) - (scaledWidth / 2);
-    var offsetTop = (element.height() / 2) - (scaledHeight / 2);
+    var offsetLeft = (element.width_() / 2) - (scaledWidth / 2);
+    var offsetTop = (element.height_() / 2) - (scaledHeight / 2);
 
     if (left === undefined)
         return {
@@ -72,6 +93,9 @@ $.fn.rectangle = function(rect) {
     });
 };
 
+// Used to distinguish a click from a drag. x1, y1 is mousedown and x2, y2 is
+// mouseup.
+
 $.isClick = function(x1, y1, x2, y2, limit) {
     return ((Math.abs(x2 - x1) <= limit) &&
         (Math.abs(y2 - y1) <= limit));
@@ -93,17 +117,3 @@ $.range = function(from1, to1, from2, to2) {
 }
 
 })(jQuery);
-
-function roundedRect(context, x, y, width, height, radius){
-    context.beginPath();
-    context.moveTo(x, y + radius);
-    context.lineTo(x, y + height - radius);
-    context.quadraticCurveTo(x, y + height, x + radius, y + height);
-    context.lineTo(x + width - radius, y + height);
-    context.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
-    context.lineTo(x + width, y + radius);
-    context.quadraticCurveTo(x + width, y, x + width - radius, y);
-    context.lineTo(x + radius, y);
-    context.quadraticCurveTo(x, y, x, y + radius);
-    context.stroke();
-}

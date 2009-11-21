@@ -1,3 +1,5 @@
+// A document is represented by an iframe and a tab.
+
 var Document = Element.extend({
     init: function(documentTab){
         this.documentTab = documentTab;

@@ -1,10 +1,15 @@
 (function($){
 
+// The overlay is a div-element placed on top of the active document-iframe to
+// make it draggable. It's also used to remember the size of the iframe when the
+// iframe is in fullscreen.
+
 $.fn.applicationOverlay = function(brevity, application) {
     return this.each(function(){
         var overlay = $(this)
             .addClass('applicationOverlay')
             .mouseover(function(e){
+
                 // This check is a workaround for what seems to be two bugs in
                 // WebKit.
                 //
@@ -16,7 +21,9 @@ $.fn.applicationOverlay = function(brevity, application) {
 
                 if ($('div.applicationOverlay.drag').length === 0) {
                     $('iframe').removeClass('preview');
-                    application.addClass('preview');
+
+                    if (application.isActive() === false)
+                        application.addClass('preview');
                 }
             })
             .mouseleave(function(e){
@@ -30,19 +37,25 @@ $.fn.applicationOverlay = function(brevity, application) {
                 var mouseDownLeft = e.clientX;
                 var mouseDownTop = e.clientY;
 
+                // document in this context is the screen area. Mouse events are
+                // bound to the entire screen for drag and drop.
+
                 var document = $(document)
                     .bind('mousemove.drag', function(e){
-                        var left = overlayPosition.left + (e.clientX - mouseDownLeft);
-                        var top = overlayPosition.top + (e.clientY - mouseDownTop);
-                        application.positionScaled(0.5, left, top);
+                        var left = overlayPosition.left +
+                            (e.clientX - mouseDownLeft);
+                        var top = overlayPosition.top +
+                            (e.clientY - mouseDownTop);
+
                         overlay.positionScaled(0.5, left, top);
+                        application.positionScaled(0.5, left, top);
                     })
                     .bind('mouseup.drag', function(e){
                         overlay.removeClass('drag');
                         document.unbind('.drag');
 
-                        if ($.isClick(mouseDownLeft, mouseDownTop, e.clientX, e.clientY, 3)
-                            === true)
+                        if ($.isClick(mouseDownLeft, mouseDownTop,
+                            e.clientX, e.clientY, 3) === true)
                             brevity.fullscreen();
                     });
             });

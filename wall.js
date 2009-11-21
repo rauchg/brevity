@@ -1,3 +1,5 @@
+// Wall is necessary as body cannot have mouse events.
+
 var Wall = Element.extend({
     init: function() {
         this.element = $(document.createElement('div')).attr('id', 'wall');

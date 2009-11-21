@@ -20,7 +20,8 @@ var Brevity = Class.extend({
             this.applications.length);
 
         application.getOverlay().appendTo('body');
-        application.getApplicationTab().appendTo(this.applicationBar.getApplicationList());
+        application.getApplicationTab().appendTo(
+            this.applicationBar.getApplicationList());
         application.getDocumentList().appendTo(this.documentBar.get());
 
         this.applications.push(application);
@@ -68,7 +69,8 @@ var Brevity = Class.extend({
             this.wall();
         else {
             if (application === this.activeApplication)
-                this.activateApplication(this.applications[this.applications.length - 1]);
+                this.activateApplication(
+                    this.applications[this.applications.length - 1]);
         }
     },
 
