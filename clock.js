@@ -28,3 +28,4 @@ $.fn.clock = function() {
 };
 
 })(jQuery);
+

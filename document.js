@@ -48,3 +48,4 @@ var Document = Element.extend({
         this.element.rectangle(rect);
     }
 });
+

@@ -1,2 +1,3 @@
 java -jar JsTestDriver.jar --reset
 java -jar JsTestDriver.jar --captureConsole --tests all
+

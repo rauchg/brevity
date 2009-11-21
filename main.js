@@ -112,7 +112,10 @@ var Main = Class.extend({
                 return;
             }
 
-            that.applicationGrid.setPosition(0, window.innerHeight - 22 - that.applicationGrid.get().height());
+            that.applicationGrid.get()
+                .css('left', 0)
+                .css('top', window.innerHeight - 22 - that.applicationGrid.get().height());
+
             that.applicationGrid.activate();
         });
 
@@ -148,3 +151,4 @@ var Main = Class.extend({
         });
     }
 });
+

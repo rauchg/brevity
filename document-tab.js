@@ -45,3 +45,4 @@ var DocumentTab = Element.extend({
         this.span.text(title);
     }
 });
+

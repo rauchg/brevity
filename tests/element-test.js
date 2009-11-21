@@ -11,3 +11,4 @@ TestCase('ElementTest', {
         assertTrue(foo.get().hasClass('active'));
     }
 });
+

@@ -67,11 +67,7 @@ $.fn.positionScaled = function(scale, left, top){
             .css('top', top - offsetTop);
 }
 
-$.fn.setPosition = function(left, top) {
-    $(this)
-        .css('left', left)
-        .css('top', top);
-}
+// Positions an element with x, y as center point.
 
 $.fn.positionAround = function(x, y) {
     var element = $(this);
@@ -79,9 +75,9 @@ $.fn.positionAround = function(x, y) {
     var left = x - (element.width() / 2);
     var top = y - (element.height() / 2);
 
-    element.setPosition(
-        $.range(left, left + element.width(), 0, window.innerWidth),
-        $.range(top, top + element.height(), 0, window.innerHeight));
+    element
+        .css('left', $.range(left, left + element.width(), 0, window.innerWidth))
+        .css('top', $.range(top, top + element.height(), 0, window.innerHeight));
 }
 
 $.fn.rectangle = function(rect) {
@@ -134,3 +130,4 @@ $.range = function(from1, to1, from2, to2) {
 }
 
 })(jQuery);
+

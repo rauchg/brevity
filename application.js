@@ -184,3 +184,4 @@ var Application = Class.extend({
             this.documents[i].rectangle(rect);
     }
 });
+

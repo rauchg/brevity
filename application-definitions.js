@@ -23,3 +23,4 @@ var applicationDefinitions = [
     {  name: 'search',
        url: 'http://www.google.com/' }
 ]];
+

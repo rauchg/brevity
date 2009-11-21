@@ -109,3 +109,4 @@ var Brevity = Class.extend({
         return !($('div.bar').hasClass('active'));
     }
 });
+

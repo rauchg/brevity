@@ -63,3 +63,4 @@ $.fn.applicationOverlay = function(brevity, application) {
 };
 
 })(jQuery);
+

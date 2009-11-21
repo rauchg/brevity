@@ -27,3 +27,4 @@ TestCase('ApplicationTest', {
         assertTrue(this.application.getOverlay().css('width') === halfScreenWidth);
     }
 });
+
