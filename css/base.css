@@ -166,20 +166,3 @@ div#clock {
     opacity: 0.625;
 }
 
-div#search {
-    position: absolute;
-    display: none;
-    left: 50px;
-    top: 50px;
-    width: 1000px;
-    height: 400px;
-    z-index: 10000;
-}
-
-div#search.active {
-    display: block;
-}
-
-input#searchBox {
-    width: 100%;
-}

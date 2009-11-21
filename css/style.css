@@ -41,12 +41,3 @@ table#applicationGrid td:hover {
     color: #000;
 }
 
-div#wallSearch {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    font-size: 20px;
-}
-
-div#wallSearch #searchBox {
-       font-size: 24pt;
-}
