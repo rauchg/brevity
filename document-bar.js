@@ -1,6 +1,6 @@
-var DocumentBar = Bar.extend({
+var DocumentBar = Element.extend({
     init: function() {
-        this._super();
+        this.element = $(document.createElement('div')).addClass('bar');
 
         this.newDocumentButton = $(document.createElement('input'))
             .button('+')

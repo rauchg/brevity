@@ -1,6 +1,6 @@
-var ApplicationBar = Bar.extend({
+var ApplicationBar = Element.extend({
     init: function() {
-        this._super();
+        this.element = $(document.createElement('div')).addClass('bar');
 
         this.newApplicationButton = $(document.createElement('input'))
             .button('+')
