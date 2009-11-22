@@ -1,5 +1,5 @@
 TestCase('DocumentTabTest', {
-    setUp: function(){
+    setUp: function() {
         this._documentTab = new DocumentTab();
     },
 

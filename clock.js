@@ -1,7 +1,7 @@
-(function($){
+(function($) {
 
 $.fn.clock = function() {
-    return this.each(function(){
+    return this.each(function() {
         var clock = $(this);
 
         function updateClock() {

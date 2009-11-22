@@ -1,5 +1,5 @@
 TestCase('ApplicationTest', {
-    setUp: function(){
+    setUp: function() {
         this.brevity = new Brevity();
 
         this.application = new Application(
@@ -9,11 +9,11 @@ TestCase('ApplicationTest', {
             1);
     },
 
-    testAddDocument: function(){
+    testAddDocument: function() {
         this.application.addDocument(new Document(new DocumentTab()));
     },
 
-    testResize_Overlay: function(){
+    testResize_Overlay: function() {
         var halfScreenWidth = (window.innerWidth / 2) + 'px';
 
         this.application.resize();

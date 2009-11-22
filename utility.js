@@ -5,9 +5,9 @@ Array.prototype.remove = function(from, to) {
     return this.push.apply(this, rest);
 };
 
-(function($){
+(function($) {
 
-// Remove 'px' from css-value and convert to int.
+// Remove 'px' from CSS-value and convert to int.
 
 $.removePx = function(str) {
     return parseInt(str.substr(0, str.length - 2), 10);
@@ -47,7 +47,7 @@ $.fn.height_ = function() {
 //
 // element.positionScaled(0.5); // Returns {left:10,top:10}:  
 
-$.fn.positionScaled = function(scale, left, top){
+$.fn.positionScaled = function(scale, left, top) {
     var element = $(this);
 
     var scaledWidth = element.width_() * scale;
@@ -90,7 +90,7 @@ $.fn.rectangle = function(rect) {
         }
     }
 
-    return this.each(function(){
+    return this.each(function() {
         $(this)
             .css('left', rect.left)
             .css('top', rect.top)

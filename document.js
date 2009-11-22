@@ -1,7 +1,7 @@
 // A document is represented by an iframe and a tab.
 
 var Document = Element.extend({
-    init: function(documentTab){
+    init: function(documentTab) {
         this.documentTab = documentTab;
 
         // Set object reference to be used in the delegation event handler for
@@ -17,34 +17,34 @@ var Document = Element.extend({
         this.documentTab.setTitle(url);
     },
 
-    getDocumentTab: function(){
+    getDocumentTab: function() {
         return this.documentTab;
     },
 
-    remove: function(){
+    remove: function() {
         this.documentTab.remove();
         this.element.remove();
     },
 
-    activate: function(){
+    activate: function() {
         this.documentTab.activate();
         this.element.addClass('activeDocument');
     },
 
-    deactivate: function(){
+    deactivate: function() {
         this.documentTab.deactivate();
         this.element.removeClass('activeDocument');
     },
 
-    setZIndex: function(zIndex){
+    setZIndex: function(zIndex) {
         this.element.css('zIndex', zIndex);
     },
 
-    positionScaled: function(scale, left, top){
+    positionScaled: function(scale, left, top) {
         this.element.positionScaled(scale, left, top);
     },
 
-    rectangle: function(rect){
+    rectangle: function(rect) {
         this.element.rectangle(rect);
     }
 });

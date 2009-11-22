@@ -1,4 +1,4 @@
-$(function(){
+$(function() {
     var main = new Main();
 });
 
@@ -54,11 +54,11 @@ var Main = Class.extend({
     initWindowEvents: function() {
         var that = this;
 
-        $(window).bind('contextmenu', function(){
+        $(window).bind('contextmenu', function() {
             return false;
         });
 
-        $(window).bind('resize', function(){
+        $(window).bind('resize', function() {
             for (var i = 0; i < that.resizeable.length; i++)
                 that.resizeable[i].resize();
         });
@@ -67,15 +67,15 @@ var Main = Class.extend({
     initKeyEvents: function() {
         var that = this;
 
-        $(document).bind('keydown', 'ctrl+space', function(){
+        $(document).bind('keydown', 'ctrl+space', function() {
             that.brevity.toggleFullscreen();
         });
 
-        $(document).bind('keydown', 'space', function(){
+        $(document).bind('keydown', 'space', function() {
             that.brevity.fullscreen();
         });
 
-        $(document).bind('keydown', 'alt+f', function(){
+        $(document).bind('keydown', 'alt+f', function() {
             that.applicationBar.toggle();
             that.documentBar.toggle();
             that.brevity.toggleBars();
@@ -85,7 +85,7 @@ var Main = Class.extend({
     initMouseEvents: function() {
         var that = this;
 
-        this.wall.get().mousedown(function(e){
+        this.wall.get().mousedown(function(e) {
             if (that.applicationGrid.isActive() === true) {
                 that.applicationGrid.deactivate();
                 return;
@@ -95,18 +95,18 @@ var Main = Class.extend({
             that.applicationGrid.activate();
         });
 
-        this.documentBar.getNewDocumentButton().click(function(e){
+        this.documentBar.getNewDocumentButton().click(function(e) {
             if (that.brevity.getActiveApplication() !== null) {
                 that.brevity.createDocument(that.brevity.getActiveApplication());
                 that.brevity.getActiveApplication().resize();
             }
         });
 
-        this.documentBar.getToggleFullscreenButton().click(function(e){
+        this.documentBar.getToggleFullscreenButton().click(function(e) {
             that.brevity.toggleFullscreen();
         });
 
-        this.applicationBar.getNewApplicationButton().click(function(e){
+        this.applicationBar.getNewApplicationButton().click(function(e) {
             if (that.applicationGrid.isActive() === true) {
                 that.applicationGrid.deactivate();
                 return;
@@ -119,18 +119,18 @@ var Main = Class.extend({
             that.applicationGrid.activate();
         });
 
-        this.applicationBar.getApplicationList().mouseover(function(e){
+        this.applicationBar.getApplicationList().mouseover(function(e) {
             var element = $(e.target);
             var application = element.data('application');
             $('iframe').removeClass('preview');
             application.addClass('preview');
         });
 
-        this.applicationBar.getApplicationList().mouseleave(function(e){
+        this.applicationBar.getApplicationList().mouseleave(function(e) {
             $('iframe').removeClass('preview');
         });
 
-        this.applicationBar.getApplicationList().mousedown(function(e){
+        this.applicationBar.getApplicationList().mousedown(function(e) {
             var element = $(e.target);
             var application = element.data('application');
 

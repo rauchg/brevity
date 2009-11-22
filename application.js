@@ -1,5 +1,5 @@
 var Application = Class.extend({
-    init: function(brevity, applicationDefinition, initialZIndex){
+    init: function(brevity, applicationDefinition, initialZIndex) {
         this.brevity = brevity;
         this.name = applicationDefinition.name;
         this.url = applicationDefinition.url;
@@ -11,7 +11,7 @@ var Application = Class.extend({
         this.initElements();
     },
 
-    initElements: function(){
+    initElements: function() {
         this.overlay = $(document.createElement('div'))
             .applicationOverlay(this.brevity, this);
 
@@ -23,31 +23,31 @@ var Application = Class.extend({
             .documentList(this);
     },
 
-    isActive: function(){
+    isActive: function() {
         return this.brevity.getActiveApplication() === this;
     },
 
-    getName: function(){
+    getName: function() {
         return this.name;
     },
 
-    getUrl: function(){
+    getUrl: function() {
         return this.url;
     },
 
-    getOverlay: function(){
+    getOverlay: function() {
         return this.overlay;
     },
 
-    getApplicationTab: function(){
+    getApplicationTab: function() {
         return this.applicationTab;
     },
 
-    getDocumentList: function(){
+    getDocumentList: function() {
         return this.documentList;
     },
 
-    activate: function(zIndex){
+    activate: function(zIndex) {
         this.documentList.addClass('active');
         this.addClass('activeApplication');
         this.overlay.addClass('activeApplication');
@@ -56,17 +56,17 @@ var Application = Class.extend({
         this.setZIndexes(zIndex);
     },
 
-    addClass: function(class_){
+    addClass: function(class_) {
         for (var i = 0; i < this.documents.length; i++)
             this.documents[i].addClass(class_);
     },
 
-    removeClass: function(class_){
+    removeClass: function(class_) {
         for (var i = 0; i < this.documents.length; i++)
             this.documents[i].removeClass(class_);
     },
 
-    deactivate: function(zIndex){
+    deactivate: function(zIndex) {
         this.documentList.removeClass('active');
         this.removeClass('activeApplication');
         this.applicationTab.removeClass('active');
@@ -75,7 +75,7 @@ var Application = Class.extend({
         this.setZIndexes(zIndex);
     },
 
-    remove: function(){
+    remove: function() {
         for (var i = 0; i < this.documents.length; i++)
             this.documents[i].remove();
 

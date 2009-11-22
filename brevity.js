@@ -1,5 +1,5 @@
 var Brevity = Class.extend({
-    init: function(wall, documentBar, applicationBar){
+    init: function(wall, documentBar, applicationBar) {
         this.wall = wall;
         this.documentBar = documentBar;
         this.applicationBar = applicationBar;
@@ -30,7 +30,7 @@ var Brevity = Class.extend({
     },
 
     activateApplication: function(application) {
-        this.applications.sort(function(a, b){
+        this.applications.sort(function(a, b) {
             return a.getZIndex() - b.getZIndex();
         });
 
@@ -88,24 +88,24 @@ var Brevity = Class.extend({
         this.resizeApplications();
     },
 
-    toggleFullscreen: function(){
+    toggleFullscreen: function() {
         $('body').toggleClass('fullscreen');
         this.resizeApplications();
     },
 
-    resizeApplications: function(){
+    resizeApplications: function() {
         for (var i = 0; i < this.applications.length; i++)
             this.applications[i].resize();
     },
 
-    toggleBars: function(){
+    toggleBars: function() {
         if (this.isFullscreen() === true) {
             for (var i = 0; i < this.applications.length; i++)
                 this.applications[i].resize();
         }
     },
 
-    areBarsHidden: function(){
+    areBarsHidden: function() {
         return !($('div.bar').hasClass('active'));
     }
 });

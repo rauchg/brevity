@@ -1,14 +1,14 @@
-(function($){
+(function($) {
 
 // The overlay is a div-element placed on top of the active document-iframe to
 // make it draggable. It's also used to remember the size of the iframe when the
 // iframe is in fullscreen.
 
 $.fn.applicationOverlay = function(brevity, application) {
-    return this.each(function(){
+    return this.each(function() {
         var overlay = $(this)
             .addClass('applicationOverlay')
-            .mouseover(function(e){
+            .mouseover(function(e) {
 
                 // This check is a workaround for what seems to be two bugs in
                 // WebKit.
@@ -26,10 +26,10 @@ $.fn.applicationOverlay = function(brevity, application) {
                         application.addClass('preview');
                 }
             })
-            .mouseleave(function(e){
+            .mouseleave(function(e) {
                 application.removeClass('preview');
             })
-            .mousedown(function(e){
+            .mousedown(function(e) {
                 brevity.activateApplication(application);
                 overlay.addClass('drag');
 
@@ -41,7 +41,7 @@ $.fn.applicationOverlay = function(brevity, application) {
                 // bound to the entire screen for drag and drop.
 
                 var document = $(document)
-                    .bind('mousemove.drag', function(e){
+                    .bind('mousemove.drag', function(e) {
                         var left = overlayPosition.left +
                             (e.clientX - mouseDownLeft);
                         var top = overlayPosition.top +
@@ -50,7 +50,7 @@ $.fn.applicationOverlay = function(brevity, application) {
                         overlay.positionScaled(0.5, left, top);
                         application.positionScaled(0.5, left, top);
                     })
-                    .bind('mouseup.drag', function(e){
+                    .bind('mouseup.drag', function(e) {
                         overlay.removeClass('drag');
                         document.unbind('.drag');
 

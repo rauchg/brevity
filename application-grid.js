@@ -1,5 +1,5 @@
 var ApplicationGrid = Element.extend({
-    init: function(brevity, applicationDefinitions){
+    init: function(brevity, applicationDefinitions) {
         this.brevity = brevity;
         this.applicationDefinitions = applicationDefinitions;
         
@@ -10,7 +10,7 @@ var ApplicationGrid = Element.extend({
         this.initEvents();
     },
 
-    initGrid: function(){
+    initGrid: function() {
         for (var i = 0; i < this.applicationDefinitions.length; i++) {
             var row = $(document.createElement('tr'));
             for (var j = 0; j < this.applicationDefinitions[i].length; j++) {
@@ -23,9 +23,9 @@ var ApplicationGrid = Element.extend({
         }
     },
 
-    initEvents: function(){
+    initEvents: function() {
         var that = this;
-        this.element.click(function(e){
+        this.element.click(function(e) {
             that.deactivate();
 
             var application = that.brevity.createApplication(
